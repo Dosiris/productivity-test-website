@@ -38,14 +38,24 @@ export default function TestPage() {
 
         {/* Name Input */}
         <div className="mb-6 md:mb-8">
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="NAME"
-            className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg h-12 md:h-14 bg-white border-4 border-black text-black text-center text-lg md:text-xl lg:text-2xl font-bold pixel-input"
-            style={{ fontFamily: 'Courier New, monospace' }}
-          />
+          <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
+            <img 
+              src="/images/hero/Name.png" 
+              alt="Name input frame"
+              className="w-full h-auto"
+            />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="NAME"
+              className="absolute inset-0 w-full h-full bg-transparent text-black text-center text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold cauhoi-font placeholder-gray-500"
+              style={{ 
+                padding: '12px 20px',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
         </div>
 
         {/* Next Button */}
@@ -53,10 +63,16 @@ export default function TestPage() {
           <button
             onClick={handleNext}
             disabled={!name.trim()}
-            className="w-32 md:w-40 lg:w-48 h-10 md:h-12 lg:h-14 bg-white border-4 border-black text-black text-center text-lg md:text-xl lg:text-2xl font-bold pixel-button-disabled hover:bg-gray-100 transition-colors duration-200"
-            style={{ fontFamily: 'Courier New, monospace' }}
+            className="relative w-32 md:w-40 lg:w-48 mx-auto block transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
-            NEXT
+            <img 
+              src="/images/hero/Next.png" 
+              alt="Next button"
+              className="w-full h-auto"
+            />
+            <span className="absolute inset-0 flex items-center justify-center text-black text-lg md:text-xl lg:text-2xl font-bold cauhoi-font">
+              NEXT
+            </span>
           </button>
         </div>
       </div>

@@ -85,53 +85,6 @@ export default function ResultPage() {
         />
       </div>
 
-      {/* Sub-heading */}
-      <div className="text-center mb-8 md:mb-10 px-4">
-        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-red-600 font-medium handwriting-font mx-auto">
-          Khám phá thêm nhiều điều hay ho với bản nâng cao!
-        </h2>
-      </div>
-
-      {/* Feature list */}
-      <div className="max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto mb-8 md:mb-10 px-4">
-        <div className="space-y-4 md:space-y-6">
-          {/* Feature 1 */}
-          <div className="flex items-center space-x-3 md:space-x-4">
-            <div className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <p className="text-black text-base md:text-lg lg:text-xl handwriting-font">
-              Nhận được phân tích tính cách chi tiết từ AI.
-            </p>
-          </div>
-
-          {/* Feature 2 */}
-          <div className="flex items-center space-x-3 md:space-x-4">
-            <div className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <p className="text-black text-base md:text-lg lg:text-xl handwriting-font">
-              Hiểu rõ hơn về sự liên quan giữa tính cách và công việc.
-            </p>
-          </div>
-
-          {/* Feature 3 */}
-          <div className="flex items-center space-x-3 md:space-x-4">
-            <div className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <p className="text-black text-base md:text-lg lg:text-xl handwriting-font">
-              Nhận gợi ý nghề nghiệp phù hợp chuẩn xác.
-            </p>
-          </div>
-        </div>
-      </div>
 
       {/* Action buttons */}
       <div className="text-center mb-6 px-4 space-y-4">

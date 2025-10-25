@@ -15,59 +15,59 @@ const questions: Question[] = [
     id: 1,
     question: "Nếu một ngày không có deadline, bạn sẽ....",
     options: [
-      "Nghỉ ngơi hoàn toàn, thoải mái làm việc mình thích mà không phải lo nghĩ về công việc.",
       "Dành thời gian nghỉ ngơi thư giãn, nhưng vẫn sắp xếp nhẹ vài việc làm trước cho ngày sau.",
-      "Tìm việc này việc kia làm nhẹ nhàng, vì không làm gì cảm giác bứt rứt khó chịu.",
-      "Vẫn tiếp tục làm việc khác hoặc lên kế hoạch mới, vì thấy không phí thời gian khi để một ngày trôi qua mà chưa làm được gì."
+      "Vẫn tiếp tục làm việc khác hoặc lên kế hoạch mới, vì thấy không phí thời gian khi để một ngày trôi qua mà chưa làm được gì.",
+      "Nghỉ ngơi hoàn toàn, thoải mái làm việc mình thích mà không phải lo nghĩ về công việc.",
+      "Tìm việc này việc kia làm nhẹ nhàng, vì không làm gì cảm giác bứt rứt khó chịu."
     ]
   },
   {
     id: 2,
     question: "Bạn vừa làm việc liên tục 5 tiếng mà chưa ăn trưa. Công việc chưa hoàn thành nhưng cơ thể bắt đầu mệt mỏi, bạn sẽ....",
     options: [
-      "Quyết định tắt máy, ăn uống nghỉ ngơi để nạp lại năng lượng.",
+      "Làm thêm chút nữa rồi nghỉ, dù hơi đói nhưng đang vào guồng năng suất, không muốn đứt mạch.",
       "Làm nốt phần dở rồi đi ăn, nghỉ ngơi xong quay lại làm tiếp để không bị kiệt sức.",
-      "Lờ luôn cơn đói, cố làm tiếp cho xong, vì dù gì cũng ăn không ngon nếu chưa xong công việc",
-      "Làm thêm chút nữa rồi nghỉ, dù hơi đói nhưng đang vào guồng năng suất, không muốn đứt mạch."
+      "Quyết định tắt máy, ăn uống nghỉ ngơi để nạp lại năng lượng.",
+      "Lờ luôn cơn đói, cố làm tiếp cho xong, vì dù gì cũng ăn không ngon nếu chưa xong công việc"
     ]
   },
   {
     id: 3,
     question: "Nếu đồng đội của bạn làm chậm tiến độ, bạn sẽ...",
     options: [
-      "Bình tĩnh, ai cũng có nhịp làm việc riêng.",
-      "Đề nghị cùng hỗ trợ hoặc sắp xếp lại thời gian.",
       "Làm phần mình nhanh hơn hoặc hỗ trợ thêm một chút để nhóm giữ nhịp.",
-      "Thường chủ động nhận thêm việc để đảm bảo kết quả đúng như kế hoạch ban đầu."
+      "Đề nghị cùng hỗ trợ hoặc sắp xếp lại thời gian.",
+      "Thường chủ động nhận thêm việc để đảm bảo kết quả đúng như kế hoạch ban đầu.",
+      "Bình tĩnh, ai cũng có nhịp làm việc riêng."
     ]
   },
   {
     id: 4,
     question: "Khi hoàn thành một dự án lớn, cảm xúc của bạn thường là...",
     options: [
-      "Cảm thấy vui vì đã hoàn thành, cuối cùng cũng được nghỉ ngơi.",
       "Hài lòng và tự thưởng cho bản thân vì đã nỗ lực.",
-      "Cảm thấy nhẹ nhõm vì cuối cùng cũng đã hoàn thành, mong muốn làm tốt hơn ở lần sau.",
-      "Vui và có cảm giác hứng khỏi muốn bắt tay ngay vào đầu việc tiếp theo để giữ mức năng suất."
+      "Vui và có cảm giác hứng khỏi muốn bắt tay ngay vào đầu việc tiếp theo để giữ mức năng suất.",
+      "Cảm thấy vui vì đã hoàn thành, cuối cùng cũng được nghỉ ngơi.",
+      "Cảm thấy nhẹ nhõm vì cuối cùng cũng đã hoàn thành, mong muốn làm tốt hơn ở lần sau."
     ]
   },
   {
     id: 5,
     question: "Khi được khen là \"rất năng suất\", bạn cảm thấy....",
     options: [
-      "Cảm thấy vui, nhưng mình cũng không đặt nặng chuyện đó.",
       "Hài lòng, thấy nỗ lực của mình được ghi nhận.",
-      "Có động lực để giữ đà làm việc như hiện tại, hài lòng về hình tượng năng suất mà bản thân tạo nên.",
-      "Cũng vui nhưng cảm thấy hiển nhiên, tự nhủ phải cố gắng hơn để không làm người khác thất vọng về mình."
+      "Cũng vui nhưng cảm thấy hiển nhiên, tự nhủ phải cố gắng hơn để không làm người khác thất vọng về mình.",
+      "Cảm thấy vui, nhưng mình cũng không đặt nặng chuyện đó.",
+      "Có động lực để giữ đà làm việc như hiện tại, hài lòng về hình tượng năng suất mà bản thân tạo nên."
     ]
   },
   {
     id: 6,
     question: "Bạn đang tận hưởng ngày nghỉ cuối tuần thì có email công việc đến. Bạn sẽ....",
     options: [
+      "Mở mail xem, nếu được thì làm luôn cho đỡ nặng đầu.",
       "không mở mail, cuối tuần không làm việc.",
       "Đọc mail rồi trả lời ngắn gọn rằng sẽ xử lý vào đầu tuần.",
-      "Mở mail xem, nếu được thì làm luôn cho đỡ nặng đầu.",
       "Lập tức mở mail để xử lý ngay, sợ sẽ bỏ lỡ tình hình và muốn mình giữ tiến độ tốt nhất."
     ]
   },
@@ -75,10 +75,10 @@ const questions: Question[] = [
     id: 7,
     question: "Khi bắt đầu một ngày mới, bạn muốn bắt tay vào công việc bởi vì...",
     options: [
-      "Vì mình hứng thú và thấy vui khi được làm.",
+      "Vì mình sợ chậm tiến độ hoặc bị mọi người đánh giá là không được việc.",
       "Vì mình muốn hoàn thành tốt để có kết quả xứng đáng.",
       "Vì nếu rảnh rỗi không làm gì, mình sẽ cảm thấy bứt rứt, không quen.",
-      "Vì mình sợ chậm tiến độ hoặc bị mọi người đánh giá là không được việc."
+      "Vì mình hứng thú và thấy vui khi được làm."
     ]
   },
   {
@@ -86,32 +86,96 @@ const questions: Question[] = [
     question: "Khi thấy người khác vẫn đang làm việc trong khi bản thân mình đang nghỉ ngơi, bạn sẽ thấy...",
     options: [
       "Bình thường, mỗi người đều có một nhịp độ thời gian riêng.",
+      "Không yên tâm nghỉ ngơi, cảm thấy áy náy và muốn quay lại làm việc để giữ phong độ.",
       "Cảm thông cho họ, nhưng vẫn nghỉ ngơi vì cần thiết để tiếp tục làm việc.",
-      "Cảm thấy hơi bứt rứt, tìm vài việc nhẹ để làm cho đỡ phí thời gian.",
-      "Không yên tâm nghỉ ngơi, cảm thấy áy náy và muốn quay lại làm việc để giữ phong độ."
+      "Cảm thấy hơi bứt rứt, tìm vài việc nhẹ để làm cho đỡ phí thời gian."
     ]
   },
   {
     id: 9,
     question: "Khi mải đắm chìm vào công việc, bạn có thường quên ăn, quên giờ không?",
     options: [
-      "không, mình làm việc có giới hạn.",
       "Đôi khi, nếu đang hứng thú với dự án.",
-      "khá thường, vì khi vào guồng có hứng làm việc thì khó dừng.",
-      "Rất thường, vì mình luôn muốn làm cho xong, hoàn thành thật tốt rồi hẵng nghỉ ngơi."
+      "không, mình làm việc có giới hạn.",
+      "Rất thường, vì mình luôn muốn làm cho xong, hoàn thành thật tốt rồi hẵng nghỉ ngơi.",
+      "khá thường, vì khi vào guồng có hứng làm việc thì khó dừng."
     ]
   },
   {
     id: 10,
     question: "Với bạn, \"làm việc năng suất\" có nghĩa là...",
     options: [
-      "Làm hết mình trong khả năng, nhưng phải ưu tiên dành thời gian cho bản thân.",
       "Làm việc có kế hoạch, tập trung vào chất lượng hơn số lượng.",
-      "Giữ nhịp làm việc đều đặn, cố gắng duy trì phong độ làm việc ở mức năng suất cao.",
-      "Phải đạt được sự công nhận và tin tưởng về năng suất, không để bản thân mình bị chậm lại."
+      "Làm hết mình trong khả năng, nhưng phải ưu tiên dành thời gian cho bản thân.",
+      "Phải đạt được sự công nhận và tin tưởng về năng suất, không để bản thân mình bị chậm lại.",
+      "Giữ nhịp làm việc đều đặn, cố gắng duy trì phong độ làm việc ở mức năng suất cao."
     ]
   }
 ];
+
+// Function to add line breaks for better text balance
+const addLineBreaks = (text: string) => {
+  if (text.length > 50) {
+    const words = text.split(' ');
+    
+    // Determine optimal number of lines based on text length
+    let optimalLines = 2;
+    if (text.length > 100) {
+      optimalLines = 3;
+    } else if (text.length > 150) {
+      optimalLines = 4;
+    }
+    
+    const targetLength = Math.floor(text.length / optimalLines);
+    const breakPoints = [];
+    
+    // Find break points for optimal number of lines
+    let currentIndex = 0;
+    for (let line = 0; line < optimalLines - 1; line++) {
+      let bestBreak = currentIndex + 1;
+      let bestDiff = Infinity;
+      
+      // Look for the best break point for this line
+      for (let i = currentIndex + 1; i < words.length - (optimalLines - line - 1); i++) {
+        const lineText = words.slice(currentIndex, i).join(' ');
+        const diff = Math.abs(lineText.length - targetLength);
+        
+        if (diff < bestDiff) {
+          bestDiff = diff;
+          bestBreak = i;
+        }
+      }
+      
+      breakPoints.push(bestBreak);
+      currentIndex = bestBreak;
+    }
+    
+    // Create the lines
+    const lines = [];
+    let startIndex = 0;
+    
+    for (let i = 0; i < breakPoints.length; i++) {
+      lines.push(words.slice(startIndex, breakPoints[i]).join(' '));
+      startIndex = breakPoints[i];
+    }
+    
+    // Add the last line
+    lines.push(words.slice(startIndex).join(' '));
+    
+    // Return the formatted text with line breaks
+    return (
+      <>
+        {lines.map((line, index) => (
+          <span key={index}>
+            {line}
+            {index < lines.length - 1 && <br />}
+          </span>
+        ))}
+      </>
+    );
+  }
+  return text;
+};
 
 export default function QuestionsPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -175,25 +239,30 @@ export default function QuestionsPage() {
       <div className="relative z-10 px-4 py-8 max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto">
         {/* Question */}
         <div className="mb-6 md:mb-8">
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white pixel-text text-center mb-6 md:mb-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white cauhoi-question-font text-center mb-6 md:mb-8">
             {currentQ.question}
           </h2>
         </div>
 
         {/* Answer options */}
-        <div className="space-y-3 md:space-y-4">
+        <div className="space-y-6 md:space-y-8">
           {currentQ.options.map((option, index) => (
             <button
               key={index}
               onClick={() => handleAnswer(index)}
-              className={`w-full p-3 md:p-4 lg:p-5 border-4 pixel-option-button text-left transition-colors duration-200 ${
+              className={`w-full pixel-option-button transition-all duration-200 ${
                 answers[currentQuestion] === index
-                  ? 'bg-blue-100 border-blue-500'
-                  : 'bg-white border-blue-300 hover:bg-blue-50'
+                  ? 'selected-answer'
+                  : 'hover:opacity-90'
               }`}
+              style={{ padding: 0 }}
             >
-              <span className="handwriting-font text-black text-sm sm:text-base md:text-lg lg:text-xl">
-                {option}
+              <span className={`text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-medium cautraloi-font ${
+                answers[currentQuestion] === index
+                  ? 'text-orange-600 font-semibold'
+                  : 'text-black'
+              }`}>
+                {addLineBreaks(option)}
               </span>
             </button>
           ))}
@@ -205,22 +274,32 @@ export default function QuestionsPage() {
           <button
             onClick={handleBack}
             disabled={currentQuestion === 0}
-            className="px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4 text-sm md:text-base lg:text-lg bg-white text-black pixel-nav-button min-w-[80px] md:min-w-[100px] lg:min-w-[120px]"
+            className="relative w-24 md:w-28 lg:w-32 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
-            ← BACK
+            <img 
+              src="/images/hero/back.png" 
+              alt="Back button"
+              className="w-full h-auto"
+            />
+            <span className="absolute inset-0 flex items-center justify-center text-black text-sm md:text-base lg:text-lg font-bold cauhoi-font">
+              ← BACK
+            </span>
           </button>
 
           {/* Next/Submit button */}
           <button
             onClick={handleNext}
             disabled={answers[currentQuestion] === null}
-            className={`px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4 text-sm md:text-base lg:text-lg min-w-[80px] md:min-w-[100px] lg:min-w-[120px] ${
-              currentQuestion === questions.length - 1
-                ? 'pixel-submit-button'
-                : 'bg-white text-black pixel-nav-button'
-            }`}
+            className="relative w-24 md:w-28 lg:w-32 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
-            {currentQuestion === questions.length - 1 ? 'SUBMIT →' : 'NEXT →'}
+            <img 
+              src="/images/hero/go.png" 
+              alt="Next button"
+              className="w-full h-auto"
+            />
+            <span className="absolute inset-0 flex items-center justify-center text-black text-sm md:text-base lg:text-lg font-bold cauhoi-font">
+              {currentQuestion === questions.length - 1 ? 'SUBMIT →' : 'NEXT →'}
+            </span>
           </button>
         </div>
       </div>
