@@ -12,65 +12,104 @@ interface Message {
 
 export default function FullVersionPage() {
   const router = useRouter();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'ai',
-      content:
-        'Xin chào 👋 Mình là trợ lý AI giúp bạn cân bằng giữa công việc và nghỉ ngơi. Hôm nay bạn cảm thấy thế nào?',
-      timestamp: new Date(),
-    },
-  ]);
-
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const profileRef = useRef<{ userName: string; type: any } | null>(null);
 
-  // 🔽 Tự động cuộn xuống khi có tin nhắn mới
+  // Khi load trang, đọc dữ liệu người dùng từ localStorage
+  useEffect(() => {
+    try {
+      const storedFull = localStorage.getItem('personalityFullData');
+      const storedUserName = localStorage.getItem('userName');
+      const full = storedFull ? JSON.parse(storedFull) : null;
+
+      // đặt profileRef: ưu tiên userName riêng, fallback từ full object
+      profileRef.current = {
+        userName: storedUserName || full?.userName || full?.name || 'bạn',
+        type: full?.type ?? null,
+      };
+    } catch (err) {
+      // nếu parse lỗi thì fallback
+      profileRef.current = { userName: 'bạn', type: null };
+      console.error('Lỗi khi đọc profile từ localStorage:', err);
+    }
+
+    const firstMessage: Message = {
+      id: 'welcome',
+      type: 'ai',
+      content: profileRef.current?.type
+        ? `Xin chào ${profileRef.current.userName}! 👋 Mình là trợ lý AI giúp bạn cân bằng giữa công việc và nghỉ ngơi. Mình đã xem kết quả bài test của bạn rồi (${profileRef.current.type?.name || 'chưa rõ kiểu tính cách'}). Bạn có muốn mình tư vấn dựa trên kết quả đó không?`
+        : `Xin chào ${profileRef.current?.userName || 'bạn'}! 👋 Mình là trợ lý AI giúp bạn cân bằng giữa công việc và nghỉ ngơi. Có vẻ như bạn chưa hoàn thành bài test tính cách — bạn muốn làm thử không?`,
+      timestamp: new Date(),
+    };
+
+    setMessages([firstMessage]);
+  }, []);
+
+  // tự động cuộn khi có tin nhắn mới
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // 🧠 Gửi tin nhắn người dùng
+  // Gửi tin nhắn
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+    const text = inputValue.trim();
+    if (!text || isTyping) return;
 
+    // Tạo message user
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: inputValue.trim(),
+      content: text,
       timestamp: new Date(),
     };
 
+    // Build payloadMessages ngay lập tức (không phụ thuộc vào setState async)
+    const payloadMessages = [...messages, userMessage];
+
+    // cập nhật giao diện ngay
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
 
     try {
+      // Lấy profile từ ref (đã chuẩn hoá lúc load)
+      const profile = profileRef.current || { userName: 'bạn', type: null };
+
+      // Gửi request lên API với payloadMessages (chứa userMessage)
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, userMessage] }),
+        body: JSON.stringify({
+          messages: payloadMessages.map(m => ({
+            role: m.type === 'user' ? 'user' : 'assistant',
+            content: m.content,
+          })),
+          profile, // gửi object profile đầy đủ (userName, type, ...)
+        }),
       });
 
       const data = await res.json();
-      const aiResponse = data.response || 'Xin lỗi, mình chưa hiểu ý bạn 😅';
+      const aiResponse = data?.response || 'Xin lỗi, mình chưa hiểu ý bạn 😅';
 
+      // append AI response
       setMessages((prev) => [
         ...prev,
         {
-          id: Date.now().toString(),
+          id: (Date.now() + 1).toString(),
           type: 'ai',
           content: aiResponse,
           timestamp: new Date(),
         },
       ]);
     } catch (err) {
-      console.error('❌ Error sending message:', err);
+      console.error('❌ Lỗi khi gửi tin nhắn:', err);
       setMessages((prev) => [
         ...prev,
         {
-          id: Date.now().toString(),
+          id: (Date.now() + 2).toString(),
           type: 'ai',
           content: 'Lỗi khi kết nối tới máy chủ 😢',
           timestamp: new Date(),
@@ -89,34 +128,21 @@ export default function FullVersionPage() {
     <div className="flex flex-col h-screen bg-gradient-to-b from-green-50 to-white">
       {/* Header */}
       <div className="p-3 bg-white border-b border-gray-200 sticky top-0 z-20">
-        <h1 className="text-base font-semibold text-gray-800">
-          🌿 Productivity Assistant
-        </h1>
+        <h1 className="text-base font-semibold text-gray-800">🌿 Productivity Assistant</h1>
       </div>
 
       {/* Chat area */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3 pb-24">
         {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'
-              }`}
-          >
-            <div
-              className={`max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${msg.type === 'user'
-                  ? 'bg-green-500 text-white rounded-br-none'
-                  : 'bg-gray-100 text-gray-800 rounded-bl-none'
-                }`}
-            >
+          <div key={msg.id} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${msg.type === 'user' ? 'bg-green-500 text-white rounded-br-none' : 'bg-gray-100 text-gray-800 rounded-bl-none'}`}>
               {msg.content}
             </div>
           </div>
         ))}
 
         {isTyping && (
-          <div className="flex items-center text-xs text-gray-500 italic">
-            AI đang gõ...
-          </div>
+          <div className="flex items-center text-xs text-gray-500 italic">AI đang gõ...</div>
         )}
 
         <div ref={messagesEndRef} />
@@ -137,18 +163,8 @@ export default function FullVersionPage() {
           disabled={!inputValue.trim() || isTyping}
           className="p-2.5 bg-green-500 text-white rounded-full hover:bg-green-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-            />
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
           </svg>
         </button>
       </div>

@@ -10,15 +10,111 @@ export default function ResultPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Lấy kết quả từ localStorage
-    const result = localStorage.getItem('personalityResult');
-    if (result) {
-      const { type } = JSON.parse(result);
-      setPersonalityType(personalityTypes[type]);
+    try {
+      // đọc 3 key có thể có
+      const resultRaw = localStorage.getItem('personalityResult'); // { type: 'overAchiever', score: {...}, answers: [...] }
+      const fullRaw = localStorage.getItem('personalityFullData'); // optional full object
+      const storedUserName = localStorage.getItem('userName'); // optional string
+
+      // helper: chuyển typeKey (string) -> object personalityTypes[typeKey] nếu có
+      const resolveTypeObject = (typeOrObj: any): PersonalityType | null => {
+        if (!typeOrObj) return null;
+        // nếu đã là object và có id/name -> coi là object đầy đủ
+        if (typeof typeOrObj === 'object' && typeOrObj.id) {
+          // đảm bảo id tồn trong personalityTypes, nếu có thì return chính bản trong personalityTypes để giữ consistency
+          const id = typeOrObj.id;
+          return personalityTypes[id] || typeOrObj;
+        }
+        // nếu là string -> lookup
+        if (typeof typeOrObj === 'string') {
+          return personalityTypes[typeOrObj] || null;
+        }
+        return null;
+      };
+
+      // parse nếu có
+      const resultObj = resultRaw ? JSON.parse(resultRaw) : null;
+      const fullObj = fullRaw ? JSON.parse(fullRaw) : null;
+
+      // Quy tắc đồng bộ:
+      // 1) Nếu có personalityResult (bắt buộc là trang result), lấy type từ đó (string) -> tìm object
+      // 2) Nếu không có personalityResult nhưng có personalityFullData, dùng fullObj.type (object hoặc string)
+      // 3) userName lấy từ key 'userName' ưu tiên, nếu không thì từ fullObj.userName (nếu có)
+
+      const userName = storedUserName || (fullObj && (fullObj.userName || fullObj.name)) || '';
+
+      let finalTypeObject: PersonalityType | null = null;
+
+      if (resultObj && resultObj.type) {
+        // resultObj.type kỳ vọng là key string (vd 'overAchiever')
+        finalTypeObject = resolveTypeObject(resultObj.type);
+      }
+
+      if (!finalTypeObject && fullObj && fullObj.type) {
+        // fullObj.type có thể là object hoặc string
+        finalTypeObject = resolveTypeObject(fullObj.type);
+      }
+
+      // Nếu vẫn chưa có finalTypeObject, không vội lưu gì, xử lý sau
+      if (finalTypeObject) {
+        setPersonalityType(finalTypeObject);
+      }
+
+      // Build/merge một bản personalityFullData chuẩn (type là object)
+      // Chỉ cập nhật localStorage nếu thiếu hoặc không đồng bộ
+      const builtFullData = {
+        userName: userName || '', // giữ chuỗi
+        type: finalTypeObject || null, // object hoặc null
+        score: resultObj?.score ?? (fullObj?.score ?? null),
+        answers: resultObj?.answers ?? (fullObj?.answers ?? []),
+        timestamp: (fullObj && fullObj.timestamp) || new Date().toISOString(),
+      };
+
+      // Decide whether to write back to localStorage:
+      // - if no fullRaw exists -> write
+      // - if fullRaw exists but type is string or missing -> replace with builtFullData
+      // - if userName key exists separately but fullObj.userName differs -> sync
+      let shouldWriteFull = false;
+
+      if (!fullRaw) {
+        shouldWriteFull = true;
+      } else {
+        // fullRaw exists: check if it is missing type object or userName mismatch
+        const fullType = fullObj?.type;
+        const fullUserName = fullObj?.userName ?? fullObj?.name ?? '';
+
+        const fullTypeIsObject = typeof fullType === 'object' && fullType?.id;
+        const finalTypeId = finalTypeObject?.id || null;
+
+        if (!fullTypeIsObject && finalTypeId) {
+          shouldWriteFull = true;
+        } else if (finalTypeId && fullTypeIsObject && fullType?.id !== finalTypeId) {
+          // mismatch type id -> update
+          shouldWriteFull = true;
+        } else if (fullUserName !== builtFullData.userName) {
+          // sync username
+          shouldWriteFull = true;
+        }
+      }
+
+      if (shouldWriteFull) {
+        // store full object (type is object)
+        localStorage.setItem('personalityFullData', JSON.stringify(builtFullData));
+      }
+
+      // ALSO: ensure we have saved userName key separately (string) for other pages (like FullVersion)
+      if (userName && localStorage.getItem('userName') !== userName) {
+        localStorage.setItem('userName', userName);
+      }
+
+    } catch (err) {
+      console.error('Lỗi khi xử lý localStorage:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
+  // Đang tải
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#FFF4C7' }}>
@@ -30,6 +126,7 @@ export default function ResultPage() {
     );
   }
 
+  // Không có kết quả
   if (!personalityType) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#FFF4C7' }}>
@@ -46,47 +143,30 @@ export default function ResultPage() {
     );
   }
 
-  const handleViewResults = () => {
-    // Chuyển đến trang xem kết quả chi tiết
-    router.push('/detailed-result');
-  };
-
-  const handleFullVersion = () => {
-    // Chuyển đến trang bản full AI
-    router.push('/full-version');
-  };
-
-  const handleRetakeTest = () => {
-    // Làm lại bài test
-    router.push('/test');
-  };
-
-  const handleBackToHome = () => {
-    // Trở về trang home
-    router.push('/');
-  };
+  // Các hàm điều hướng
+  const handleFullVersion = () => router.push('/full-version');
+  const handleRetakeTest = () => router.push('/test');
+  const handleBackToHome = () => router.push('/');
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#FFF4C7' }}>
-
-      {/* Main heading */}
+    <div className="min-h-screen" style={{ backgroundColor: '#FFF4C7' } as React.CSSProperties}>
+      {/* Tiêu đề */}
       <div className="text-center pt-6 md:pt-8 pb-4 px-4">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-black mb-6 md:mb-8 pixel-text mx-auto">
           Kết quả
         </h1>
       </div>
 
-      {/* Personality result */}
+      {/* Hình ảnh kết quả */}
       <div className="w-full mb-6 md:mb-8 flex justify-center px-4">
-        <img 
-          src={personalityType.image} 
+        <img
+          src={personalityType.image}
           alt={personalityType.name}
           className="h-auto block max-w-full"
         />
       </div>
 
-
-      {/* Action buttons */}
+      {/* Nút hành động */}
       <div className="text-center mb-6 px-4 space-y-4">
         <div>
           <button
@@ -96,7 +176,7 @@ export default function ResultPage() {
             Trải nghiệm bản full AI
           </button>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center max-w-2xl mx-auto">
           <button
             onClick={handleRetakeTest}
@@ -119,8 +199,8 @@ export default function ResultPage() {
         </div>
       </div>
 
-      {/* Footer text */}
-      <div className="text-center text-sm text-black px-4">
+      {/* Footer */}
+      <div className="text-center text-sm text-black px-4 pb-4">
         <p>This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.</p>
       </div>
     </div>

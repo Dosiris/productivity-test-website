@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { calculatePersonalityScore, determinePersonalityType } from '@/lib/personalityScoring';
+import { calculatePersonalityScore, determinePersonalityType, personalityTypes } from '@/lib/personalityScoring';
 
 interface Question {
   id: number;
@@ -66,7 +66,7 @@ const questions: Question[] = [
     question: "Bạn đang tận hưởng ngày nghỉ cuối tuần thì có email công việc đến. Bạn sẽ....",
     options: [
       "Mở mail xem, nếu được thì làm luôn cho đỡ nặng đầu.",
-      "không mở mail, cuối tuần không làm việc.",
+      "Không mở mail, cuối tuần không làm việc.",
       "Đọc mail rồi trả lời ngắn gọn rằng sẽ xử lý vào đầu tuần.",
       "Lập tức mở mail để xử lý ngay, sợ sẽ bỏ lỡ tình hình và muốn mình giữ tiến độ tốt nhất."
     ]
@@ -96,9 +96,9 @@ const questions: Question[] = [
     question: "Khi mải đắm chìm vào công việc, bạn có thường quên ăn, quên giờ không?",
     options: [
       "Đôi khi, nếu đang hứng thú với dự án.",
-      "không, mình làm việc có giới hạn.",
+      "Không, mình làm việc có giới hạn.",
       "Rất thường, vì mình luôn muốn làm cho xong, hoàn thành thật tốt rồi hẵng nghỉ ngơi.",
-      "khá thường, vì khi vào guồng có hứng làm việc thì khó dừng."
+      "Khá thường, vì khi vào guồng có hứng làm việc thì khó dừng."
     ]
   },
   {
@@ -113,62 +113,28 @@ const questions: Question[] = [
   }
 ];
 
-// Function to add line breaks for better text balance
 const addLineBreaks = (text: string) => {
   if (text.length > 50) {
     const words = text.split(' ');
-    
-    // Determine optimal number of lines based on text length
-    let optimalLines = 2;
-    if (text.length > 100) {
-      optimalLines = 3;
-    } else if (text.length > 150) {
-      optimalLines = 4;
-    }
-    
-    const targetLength = Math.floor(text.length / optimalLines);
-    const breakPoints = [];
-    
-    // Find break points for optimal number of lines
-    let currentIndex = 0;
-    for (let line = 0; line < optimalLines - 1; line++) {
-      let bestBreak = currentIndex + 1;
-      let bestDiff = Infinity;
-      
-      // Look for the best break point for this line
-      for (let i = currentIndex + 1; i < words.length - (optimalLines - line - 1); i++) {
-        const lineText = words.slice(currentIndex, i).join(' ');
-        const diff = Math.abs(lineText.length - targetLength);
-        
-        if (diff < bestDiff) {
-          bestDiff = diff;
-          bestBreak = i;
-        }
+    const lines: string[] = [];
+    let currentLine = '';
+
+    words.forEach(word => {
+      if ((currentLine + ' ' + word).trim().length > 50) {
+        lines.push(currentLine.trim());
+        currentLine = word;
+      } else {
+        currentLine += (currentLine ? ' ' : '') + word;
       }
-      
-      breakPoints.push(bestBreak);
-      currentIndex = bestBreak;
-    }
-    
-    // Create the lines
-    const lines = [];
-    let startIndex = 0;
-    
-    for (let i = 0; i < breakPoints.length; i++) {
-      lines.push(words.slice(startIndex, breakPoints[i]).join(' '));
-      startIndex = breakPoints[i];
-    }
-    
-    // Add the last line
-    lines.push(words.slice(startIndex).join(' '));
-    
-    // Return the formatted text with line breaks
+    });
+
+    if (currentLine) lines.push(currentLine.trim());
     return (
       <>
-        {lines.map((line, index) => (
-          <span key={index}>
+        {lines.map((line, i) => (
+          <span key={i}>
             {line}
-            {index < lines.length - 1 && <br />}
+            {i < lines.length - 1 && <br />}
           </span>
         ))}
       </>
@@ -183,34 +149,81 @@ export default function QuestionsPage() {
   const router = useRouter();
 
   const handleAnswer = (answerIndex: number) => {
-    const newAnswers = [...answers];
-    newAnswers[currentQuestion] = answerIndex;
-    setAnswers(newAnswers);
+    const updated = [...answers];
+    updated[currentQuestion] = answerIndex;
+    setAnswers(updated);
   };
 
   const handleNext = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
-    } else {
-      // Tính điểm và chuyển đến trang kết quả
-      const score = calculatePersonalityScore(answers.filter(a => a !== null) as number[]);
-      const personalityType = determinePersonalityType(score);
-      
-      // Lưu kết quả vào localStorage
-      localStorage.setItem('personalityResult', JSON.stringify({
-        type: personalityType,
-        score: score,
-        answers: answers
-      }));
-      
+      return;
+    }
+
+    // Khi ở câu cuối: kiểm tra đã trả lời hết 10 câu chưa
+    const unansweredIndex = answers.findIndex(a => a === null);
+    if (unansweredIndex !== -1) {
+      // đưa người dùng về câu chưa trả lời (hoặc thông báo)
+      setCurrentQuestion(unansweredIndex);
+      // thông báo ngắn gọn
+      alert(`Bạn chưa trả lời câu ${unansweredIndex + 1}. Vui lòng trả lời tất cả câu trước khi nộp.`);
+      return;
+    }
+
+    // Tính điểm (answers đã đầy)
+    try {
+      const numericAnswers = answers as number[]; // an toàn vì đã kiểm tra không còn null
+      const score = calculatePersonalityScore(numericAnswers);
+      const typeKey = determinePersonalityType(score);
+      const typeData = personalityTypes[typeKey] || null;
+
+      // Lấy tên người dùng: ưu tiên key 'userName', fallback vào personalityFullData.userName
+      let userName = localStorage.getItem('userName') || '';
+      if (!userName) {
+        const storedFull = localStorage.getItem('personalityFullData');
+        if (storedFull) {
+          try {
+            const parsed = JSON.parse(storedFull);
+            if (parsed?.userName) userName = parsed.userName;
+          } catch (e) {
+            // ignore parse error
+          }
+        }
+      }
+      if (!userName) userName = 'Guest';
+
+      // Lưu kết quả tóm tắt cho /result
+      const personalityResult = {
+        type: typeKey,
+        score,
+        answers: numericAnswers,
+      };
+      localStorage.setItem('personalityResult', JSON.stringify(personalityResult));
+
+      // Lưu full data (dùng trong /full-version chat)
+      const fullData = {
+        userName,
+        type: typeData, // object chi tiết (name, image, tips...)
+        typeKey,
+        score,
+        answers: numericAnswers,
+        timestamp: new Date().toISOString(),
+      };
+      localStorage.setItem('personalityFullData', JSON.stringify(fullData));
+
+      // Lưu riêng userName để các trang khác dễ đọc
+      localStorage.setItem('userName', userName);
+
+      // Chuyển trang
       router.push('/result');
+    } catch (err) {
+      console.error('Lỗi khi tính điểm hoặc lưu localStorage:', err);
+      alert('Có lỗi xảy ra khi lưu kết quả. Vui lòng thử lại.');
     }
   };
 
   const handleBack = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    }
+    if (currentQuestion > 0) setCurrentQuestion(currentQuestion - 1);
   };
 
   const currentQ = questions[currentQuestion];
@@ -218,88 +231,44 @@ export default function QuestionsPage() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Background với ảnh image 1 */}
+      {/* Background */}
       <div className="absolute inset-0">
-        <img 
-          src="/images/hero/image 1.png" 
-          alt="Background"
-          className="w-full h-full object-cover"
-        />
+        <img src="/images/hero/image 1.png" alt="Background" className="w-full h-full object-cover" />
       </div>
 
       {/* Progress bar */}
       <div className="relative z-10 w-full h-2 bg-gray-200">
-        <div 
-          className="h-full bg-orange-500 transition-all duration-300"
-          style={{ width: `${progress}%` }}
-        ></div>
+        <div className="h-full bg-orange-500 transition-all duration-300" style={{ width: `${progress}%` }}></div>
       </div>
 
-      {/* Question content */}
+      {/* Nội dung câu hỏi */}
       <div className="relative z-10 px-4 py-8 max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto">
-        {/* Question Image */}
         <div className="mb-6 md:mb-8 text-center">
-          <img 
-            src={`/images/Questions/${currentQ.id}.png`}
-            alt={`Question ${currentQ.id}`}
-            className="mx-auto max-w-full h-auto"
-            style={{ maxHeight: '300px' }}
-          />
+          <img src={`/images/Questions/${currentQ.id}.png`} alt={`Question ${currentQ.id}`} className="mx-auto max-w-full h-auto" style={{ maxHeight: '300px' }} />
         </div>
 
-        {/* Answer options */}
         <div className="space-y-8 md:space-y-10 lg:space-y-12">
           {currentQ.options.map((option, index) => (
             <button
               key={index}
               onClick={() => handleAnswer(index)}
-              className={`w-full pixel-option-button transition-all duration-200 ${
-                answers[currentQuestion] === index
-                  ? 'selected-answer'
-                  : 'hover:opacity-90'
-              }`}
-              style={{ padding: 0 }}
+              className={`w-full pixel-option-button transition-all duration-200 ${answers[currentQuestion] === index ? 'selected-answer' : 'hover:opacity-90'}`}
             >
-              <span className={`text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-medium cautraloi-font ${
-                answers[currentQuestion] === index
-                  ? 'text-orange-600 font-semibold'
-                  : 'text-black'
-              }`}>
+              <span className={`text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-medium cautraloi-font ${answers[currentQuestion] === index ? 'text-orange-600 font-semibold' : 'text-black'}`}>
                 {addLineBreaks(option)}
               </span>
             </button>
           ))}
         </div>
 
-        {/* Navigation buttons */}
         <div className="flex justify-between items-center mt-6 md:mt-8 gap-3 md:gap-4">
-          {/* Back button */}
-          <button
-            onClick={handleBack}
-            disabled={currentQuestion === 0}
-            className="relative w-24 md:w-28 lg:w-32 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-          >
-            <img 
-              src="/images/hero/back.png" 
-              alt="Back button"
-              className="w-full h-auto"
-            />
-            <span className="absolute inset-0 flex items-center justify-center text-black text-sm md:text-base lg:text-lg font-bold cauhoi-font">
-              ← BACK
-            </span>
+          <button onClick={handleBack} disabled={currentQuestion === 0} className="relative w-24 md:w-28 lg:w-32 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+            <img src="/images/hero/back.png" alt="Back button" className="w-full h-auto" />
+            <span className="absolute inset-0 flex items-center justify-center text-black text-sm md:text-base lg:text-lg font-bold cauhoi-font">← BACK</span>
           </button>
 
-          {/* Next/Submit button */}
-          <button
-            onClick={handleNext}
-            disabled={answers[currentQuestion] === null}
-            className="relative w-24 md:w-28 lg:w-32 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-          >
-            <img 
-              src="/images/hero/go.png" 
-              alt="Next button"
-              className="w-full h-auto"
-            />
+          <button onClick={handleNext} disabled={answers[currentQuestion] === null} className="relative w-24 md:w-28 lg:w-32 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+            <img src="/images/hero/go.png" alt="Next button" className="w-full h-auto" />
             <span className="absolute inset-0 flex items-center justify-center text-black text-sm md:text-base lg:text-lg font-bold cauhoi-font">
               {currentQuestion === questions.length - 1 ? 'SUBMIT →' : 'NEXT →'}
             </span>

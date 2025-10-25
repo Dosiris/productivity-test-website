@@ -58,8 +58,8 @@ export default function DetailedResultPage() {
     <div className="min-h-screen" style={{ backgroundColor: '#FFF4C7' }}>
       {/* Personality Image (full width, no white background) */}
       <div className="w-full flex justify-center px-4">
-        <img 
-          src={personalityType.image} 
+        <img
+          src={personalityType.image}
           alt={personalityType.name}
           className="h-auto block max-w-full"
         />

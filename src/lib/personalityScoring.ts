@@ -122,74 +122,74 @@ export function calculatePersonalityScore(answers: number[]): PersonalityScore {
   // Logic tính điểm cho từng câu hỏi với thứ tự đáp án đã xáo trộn
   answers.forEach((answer, questionIndex) => {
     switch (questionIndex) {
-      case 0: // Câu hỏi về deadline - Xáo trộn: Chiller→C, Balancer→A, BusyBee→D, OverAchiever→B
-        if (answer === 0) score.balancer += 4;       // A: Balancer
-        if (answer === 1) score.overAchiever += 4;   // B: Over Achiever
-        if (answer === 2) score.chiller += 4;        // C: Chiller
-        if (answer === 3) score.busyBee += 4;        // D: Busy Bee
+      case 0: // Không có deadline
+        if (answer === 0) score.balancer += 4;       // nghỉ thoải mái
+        if (answer === 1) score.overAchiever += 4;   // tranh thủ sắp xếp
+        if (answer === 2) score.chiller += 4;        // làm nhẹ cho vui
+        if (answer === 3) score.busyBee += 4;        // vẫn làm tiếp
         break;
-      
-      case 1: // Câu hỏi về làm việc 5 tiếng - Xáo trộn: Chiller→B, Balancer→D, OverAchiever→A, BusyBee→C
-        if (answer === 0) score.overAchiever += 4;   // A: Over Achiever
-        if (answer === 1) score.chiller += 4;        // B: Chiller
-        if (answer === 2) score.busyBee += 4;        // C: Busy Bee
-        if (answer === 3) score.balancer += 4;       // D: Balancer
+
+      case 1: // Làm việc 5 tiếng liên tục
+        if (answer === 0) score.overAchiever += 4;   // làm cho xong
+        if (answer === 1) score.chiller += 4;        // nghỉ hợp lý
+        if (answer === 2) score.busyBee += 4;        // thêm chút nữa
+        if (answer === 3) score.balancer += 4;       // làm có giới hạn
         break;
-      
-      case 2: // Câu hỏi về đồng đội chậm - Xáo trộn: Chiller→D, Balancer→B, BusyBee→A, OverAchiever→C
-        if (answer === 0) score.busyBee += 2;        // A: Busy Bee (hơi phù hợp)
-        if (answer === 1) score.balancer += 4;       // B: Balancer (rất phù hợp)
-        if (answer === 2) score.overAchiever += 4;   // C: Over Achiever (rất phù hợp)
-        if (answer === 3) score.chiller += 2;        // D: Chiller (hơi phù hợp)
+
+      case 2: // Đồng đội chậm tiến độ
+        if (answer === 0) score.busyBee += 2;        // bình tĩnh
+        if (answer === 1) score.balancer += 4;       // hỗ trợ, sắp xếp lại
+        if (answer === 2) score.overAchiever += 4;   // gánh thêm việc
+        if (answer === 3) score.chiller += 2;        // thoải mái, không áp lực
         break;
-      
-      case 3: // Câu hỏi về hoàn thành dự án - Xáo trộn: Chiller→C, Balancer→A, BusyBee→D, OverAchiever→B
-        if (answer === 0) score.balancer += 2;       // A: Balancer (hơi phù hợp)
-        if (answer === 1) score.overAchiever += 4;   // B: Over Achiever (rất phù hợp)
-        if (answer === 2) score.chiller += 4;        // C: Chiller (rất phù hợp)
-        if (answer === 3) score.busyBee += 2;        // D: Busy Bee (hơi phù hợp)
+
+      case 3: // Hoàn thành dự án lớn
+        if (answer === 0) score.balancer += 3;       // vui vì xong
+        if (answer === 1) score.overAchiever += 4;   // tự thưởng vì nỗ lực
+        if (answer === 2) score.chiller += 4;        // muốn làm ngay việc mới
+        if (answer === 3) score.busyBee += 2;        // nhẹ nhõm, hướng tới sau
         break;
-      
-      case 4: // Câu hỏi về được khen năng suất - Xáo trộn: Chiller→B, Balancer→D, OverAchiever→A, BusyBee→C
-        if (answer === 0) score.overAchiever += 4;   // A: Over Achiever (rất phù hợp)
-        if (answer === 1) score.chiller += 4;        // B: Chiller (rất phù hợp)
-        if (answer === 2) score.busyBee += 2;        // C: Busy Bee (hơi phù hợp)
-        if (answer === 3) score.balancer += 2;       // D: Balancer (hơi phù hợp)
+
+      case 4: // Được khen năng suất
+        if (answer === 0) score.balancer += 4;       // vui nhẹ, không quan trọng
+        if (answer === 1) score.overAchiever += 4;   // hài lòng được ghi nhận
+        if (answer === 2) score.busyBee += 2;        // muốn giữ phong độ
+        if (answer === 3) score.chiller += 2;        // không đặt nặng
         break;
-      
-      case 5: // Câu hỏi về email cuối tuần - Xáo trộn: Chiller→C, Balancer→A, BusyBee→D, OverAchiever→B
-        if (answer === 0) score.balancer += 4;       // A: Balancer (rất phù hợp)
-        if (answer === 1) score.overAchiever += 1;   // B: Over Achiever (ít phù hợp)
-        if (answer === 2) score.chiller += 4;        // C: Chiller (rất phù hợp)
-        if (answer === 3) score.busyBee += 1;        // D: Busy Bee (ít phù hợp)
+
+      case 5: // Email cuối tuần
+        if (answer === 0) score.balancer += 4;       // không mở
+        if (answer === 1) score.overAchiever += 2;   // trả lời nhẹ
+        if (answer === 2) score.chiller += 3;        // xem, làm nếu tiện
+        if (answer === 3) score.busyBee += 2;        // làm ngay
         break;
-      
-      case 6: // Câu hỏi về bắt đầu ngày mới - Xáo trộn: Chiller→B, Balancer→C, BusyBee→A, OverAchiever→D
-        if (answer === 0) score.busyBee += 4;        // A: Busy Bee (rất phù hợp)
-        if (answer === 1) score.chiller += 1;        // B: Chiller (ít phù hợp)
-        if (answer === 2) score.balancer += 2;       // C: Balancer (hơi phù hợp)
-        if (answer === 3) score.overAchiever += 4;   // D: Over Achiever (rất phù hợp)
+
+      case 6: // Bắt đầu ngày mới
+        if (answer === 0) score.busyBee += 4;        // thích làm
+        if (answer === 1) score.chiller += 2;        // hứng thú vừa phải
+        if (answer === 2) score.balancer += 3;       // làm có kế hoạch
+        if (answer === 3) score.overAchiever += 4;   // sợ chậm tiến độ
         break;
-      
-      case 7: // Câu hỏi về thấy người khác làm việc - Xáo trộn: Chiller→D, Balancer→B, BusyBee→C, OverAchiever→A
-        if (answer === 0) score.overAchiever += 4;   // A: Over Achiever (rất phù hợp)
-        if (answer === 1) score.balancer += 2;       // B: Balancer (hơi phù hợp)
-        if (answer === 2) score.busyBee += 2;        // C: Busy Bee (hơi phù hợp)
-        if (answer === 3) score.chiller += 4;        // D: Chiller (rất phù hợp)
+
+      case 7: // Thấy người khác vẫn làm việc
+        if (answer === 0) score.overAchiever += 4;   // quay lại làm
+        if (answer === 1) score.balancer += 3;       // cảm thông
+        if (answer === 2) score.busyBee += 2;        // làm nhẹ nhàng
+        if (answer === 3) score.chiller += 4;        // vẫn nghỉ ngơi
         break;
-      
-      case 8: // Câu hỏi về quên ăn khi làm việc - Xáo trộn: Chiller→A, Balancer→C, BusyBee→D, OverAchiever→B
-        if (answer === 0) score.chiller += 4;        // A: Chiller (rất phù hợp)
-        if (answer === 1) score.overAchiever += 4;   // B: Over Achiever (rất phù hợp)
-        if (answer === 2) score.balancer += 2;       // C: Balancer (hơi phù hợp)
-        if (answer === 3) score.busyBee += 2;        // D: Busy Bee (hơi phù hợp)
+
+      case 8: // Quên ăn khi làm việc
+        if (answer === 0) score.chiller += 4;        // không bao giờ
+        if (answer === 1) score.overAchiever += 4;   // thỉnh thoảng
+        if (answer === 2) score.balancer += 3;       // thỉnh thoảng thôi
+        if (answer === 3) score.busyBee += 2;        // khá thường
         break;
-      
-      case 9: // Câu hỏi về định nghĩa năng suất - Xáo trộn: Chiller→B, Balancer→A, BusyBee→D, OverAchiever→C
-        if (answer === 0) score.balancer += 4;       // A: Balancer (rất phù hợp)
-        if (answer === 1) score.chiller += 4;        // B: Chiller (rất phù hợp)
-        if (answer === 2) score.overAchiever += 1;   // C: Over Achiever (ít phù hợp)
-        if (answer === 3) score.busyBee += 1;        // D: Busy Bee (ít phù hợp)
+
+      case 9: // Định nghĩa năng suất
+        if (answer === 0) score.balancer += 4;       // có giới hạn
+        if (answer === 1) score.chiller += 4;        // tập trung chất lượng
+        if (answer === 2) score.overAchiever += 2;   // duy trì phong độ
+        if (answer === 3) score.busyBee += 2;        // công nhận & kết quả
         break;
     }
   });
@@ -205,20 +205,20 @@ export function determinePersonalityType(score: PersonalityScore): string {
     { type: 'balancer', score: score.balancer },
     { type: 'overAchiever', score: score.overAchiever }
   ];
-  
+
   // Sắp xếp theo điểm số giảm dần
   scores.sort((a, b) => b.score - a.score);
-  
+
   const maxScore = scores[0].score;
-  
+
   // Tìm tất cả các tính cách có điểm cao nhất
   const topScores = scores.filter(s => s.score === maxScore);
-  
+
   // Nếu chỉ có 1 tính cách có điểm cao nhất
   if (topScores.length === 1) {
     return topScores[0].type;
   }
-  
+
   // Nếu có nhiều tính cách có điểm bằng nhau, xử lý đặc biệt
   if (topScores.length === 2) {
     // Trường hợp 2 tính cách bằng nhau - ưu tiên theo thứ tự
@@ -229,7 +229,7 @@ export function determinePersonalityType(score: PersonalityScore): string {
       }
     }
   }
-  
+
   if (topScores.length === 3) {
     // Trường hợp 3 tính cách bằng nhau - ưu tiên Balancer
     if (topScores.some(s => s.type === 'balancer')) {
@@ -240,12 +240,12 @@ export function determinePersonalityType(score: PersonalityScore): string {
       return 'chiller';
     }
   }
-  
+
   if (topScores.length === 4) {
     // Trường hợp tất cả bằng nhau - mặc định Balancer
     return 'balancer';
   }
-  
+
   // Fallback
   return 'balancer';
 }
@@ -255,7 +255,7 @@ export function getDetailedResult(score: PersonalityScore): {
   primaryType: string;
   secondaryTypes: string[];
   isTie: boolean;
-  scoreDetails: Array<{type: string, score: number}>;
+  scoreDetails: Array<{ type: string, score: number }>;
 } {
   const scores = [
     { type: 'busyBee', score: score.busyBee },
@@ -263,18 +263,18 @@ export function getDetailedResult(score: PersonalityScore): {
     { type: 'balancer', score: score.balancer },
     { type: 'overAchiever', score: score.overAchiever }
   ];
-  
+
   // Sắp xếp theo điểm số giảm dần
   scores.sort((a, b) => b.score - a.score);
-  
+
   const maxScore = scores[0].score;
   const topScores = scores.filter(s => s.score === maxScore);
-  
+
   const primaryType = determinePersonalityType(score);
   const secondaryTypes = topScores
     .filter(s => s.type !== primaryType)
     .map(s => s.type);
-  
+
   return {
     primaryType,
     secondaryTypes,
