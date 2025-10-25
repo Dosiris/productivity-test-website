@@ -237,15 +237,18 @@ export default function QuestionsPage() {
 
       {/* Question content */}
       <div className="relative z-10 px-4 py-8 max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto">
-        {/* Question */}
-        <div className="mb-6 md:mb-8">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white cauhoi-question-font text-center mb-6 md:mb-8">
-            {currentQ.question}
-          </h2>
+        {/* Question Image */}
+        <div className="mb-6 md:mb-8 text-center">
+          <img 
+            src={`/images/Questions/${currentQ.id}.png`}
+            alt={`Question ${currentQ.id}`}
+            className="mx-auto max-w-full h-auto"
+            style={{ maxHeight: '300px' }}
+          />
         </div>
 
         {/* Answer options */}
-        <div className="space-y-6 md:space-y-8">
+        <div className="space-y-8 md:space-y-10 lg:space-y-12">
           {currentQ.options.map((option, index) => (
             <button
               key={index}
