@@ -35,7 +35,7 @@ const questions: Question[] = [
     id: 3,
     question: "Nếu đồng đội của bạn làm chậm tiến độ, bạn sẽ...",
     options: [
-      "Làm phần mình nhanh hơn hoặc hỗ trợ thêm một chút để nhóm giữ nhịp.",
+      "Làm phần mình nhanh hơn hoặc hỗ trợ thêm để nhóm giữ nhịp.",
       "Đề nghị cùng hỗ trợ hoặc sắp xếp lại thời gian.",
       "Thường chủ động nhận thêm việc để đảm bảo kết quả đúng như kế hoạch ban đầu.",
       "Bình tĩnh, ai cũng có nhịp làm việc riêng."
