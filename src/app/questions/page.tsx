@@ -114,7 +114,7 @@ const questions: Question[] = [
 ];
 
 const addLineBreaks = (text: string) => {
-  if (text.length > 40) {
+  if (text.length > 35) {
     const words = text.split(' ');
     const lines: string[] = [];
     let currentLine = '';
@@ -123,7 +123,7 @@ const addLineBreaks = (text: string) => {
       const testLine = currentLine + (currentLine ? ' ' : '') + word;
       
       // Kiểm tra nếu thêm từ này sẽ vượt quá giới hạn
-      if (testLine.length > 40) {
+      if (testLine.length > 35) {
         // Nếu dòng hiện tại không rỗng, lưu nó
         if (currentLine) {
           lines.push(currentLine.trim());
@@ -143,10 +143,38 @@ const addLineBreaks = (text: string) => {
       lines.push(currentLine.trim());
     }
 
-    // Tối ưu hóa: nếu có 3 dòng và dòng cuối quá ngắn, gộp với dòng trước
-    if (lines.length === 3 && lines[2].length < 15) {
-      lines[1] = lines[1] + ' ' + lines[2];
-      lines.pop();
+    // Tối ưu hóa mạnh mẽ: ưu tiên 2 dòng, chỉ cho phép 3 dòng khi thực sự cần thiết
+    if (lines.length === 3) {
+      // Nếu dòng cuối quá ngắn (< 12 ký tự), gộp với dòng trước
+      if (lines[2].length < 12) {
+        lines[1] = lines[1] + ' ' + lines[2];
+        lines.pop();
+      }
+      // Nếu dòng giữa quá ngắn (< 10 ký tự), gộp với dòng đầu
+      else if (lines[1].length < 10) {
+        lines[0] = lines[0] + ' ' + lines[1];
+        lines.splice(1, 1);
+      }
+      // Nếu cả 3 dòng đều ngắn, thử gộp lại thành 2 dòng cân bằng hơn
+      else if (lines[0].length < 20 && lines[1].length < 20 && lines[2].length < 20) {
+        const combined = lines.join(' ');
+        const midPoint = Math.floor(combined.length / 2);
+        const words = combined.split(' ');
+        let firstLine = '';
+        let secondLine = '';
+        
+        for (const word of words) {
+          if ((firstLine + ' ' + word).trim().length <= midPoint + 5) {
+            firstLine += (firstLine ? ' ' : '') + word;
+          } else {
+            secondLine += (secondLine ? ' ' : '') + word;
+          }
+        }
+        
+        lines[0] = firstLine.trim();
+        lines[1] = secondLine.trim();
+        lines.pop();
+      }
     }
 
     return (
