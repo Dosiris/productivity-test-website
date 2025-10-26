@@ -1,5 +1,4 @@
-HOW TO SETUP AI LOCAL, PLEASE DO THESE INSTRUCTION
-# Example environment variables for setup
+# HOW TO SETUP AI LOCAL, PLEASE DO THESE INSTRUCTION
 -First create file outside src file and place same level with (file system) such as package.json, package-lock.son,... 
 
 -Second, place name .env.local
