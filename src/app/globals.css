@@ -252,6 +252,14 @@ body {
   box-sizing: border-box;
 }
 
+/* Mobile: Left align text */
+@media (max-width: 640px) {
+  .pixel-option-button span {
+    text-align: left;
+    text-align-last: left;
+  }
+}
+
 /* Better text wrapping for long options */
 .pixel-option-button {
   text-align: center;
@@ -281,7 +289,7 @@ body {
 /* Better text balancing for mobile */
 @media (max-width: 640px) {
   .pixel-option-button span {
-    text-align: center;
+    text-align: left;
     word-spacing: 0.05em;
     letter-spacing: 0.01em;
     line-height: 1.35;

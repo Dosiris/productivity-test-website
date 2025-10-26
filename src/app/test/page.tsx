@@ -67,7 +67,7 @@ export default function TestPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="NAME"
-              className="absolute inset-0 w-full h-full bg-transparent text-black text-center text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold cauhoi-font placeholder-gray-500 outline-none"
+              className="absolute inset-0 w-full h-full bg-transparent text-black text-center text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold cauhoi-font placeholder-gray-500 outline-none"
               style={{ padding: '12px 20px', boxSizing: 'border-box' }}
             />
           </div>
