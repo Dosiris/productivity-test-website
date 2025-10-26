@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /* Custom Arcade Font */
@@ -74,10 +74,20 @@ body {
   }
 }
 
-/* Handwriting font */
+/* Handwriting font - Game-style with Vietnamese support */
 .handwriting-font {
-  font-family: 'Kalam', 'Inter', cursive;
+  font-family: 'Fredoka', 'Nunito', 'Inter', sans-serif;
   font-weight: 400;
+  letter-spacing: 0.3px;
+  line-height: 1.6;
+}
+
+/* Alternative game-style font for Vietnamese */
+.game-text-font {
+  font-family: 'Nunito', 'Fredoka', 'Inter', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  line-height: 1.5;
 }
 
 /* Cauhoi font for questions - Pixel style with high contrast */
