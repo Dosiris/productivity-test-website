@@ -18,22 +18,20 @@ export default function FullVersionPage() {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const profileRef = useRef<{ userName: string; type: any } | null>(null);
 
-  // Khi load trang, đọc dữ liệu người dùng từ localStorage
+  // 🔹 Khi load trang, đọc dữ liệu người dùng từ localStorage
   useEffect(() => {
     try {
-      const storedFull = localStorage.getItem('personalityFullData');
-      const storedUserName = localStorage.getItem('userName');
+      const storedFull = typeof window !== 'undefined' ? localStorage.getItem('personalityFullData') : null;
+      const storedUserName = typeof window !== 'undefined' ? localStorage.getItem('userName') : null;
       const full = storedFull ? JSON.parse(storedFull) : null;
 
-      // đặt profileRef: ưu tiên userName riêng, fallback từ full object
       profileRef.current = {
         userName: storedUserName || full?.userName || full?.name || 'bạn',
         type: full?.type ?? null,
       };
     } catch (err) {
-      // nếu parse lỗi thì fallback
       profileRef.current = { userName: 'bạn', type: null };
-      console.error('Lỗi khi đọc profile từ localStorage:', err);
+      console.error('⚠️ Lỗi khi đọc profile từ localStorage:', err);
     }
 
     const firstMessage: Message = {
@@ -48,17 +46,16 @@ export default function FullVersionPage() {
     setMessages([firstMessage]);
   }, []);
 
-  // tự động cuộn khi có tin nhắn mới
+  // 🔹 Tự động cuộn khi có tin nhắn mới
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Gửi tin nhắn
+  // 🔹 Gửi tin nhắn
   const handleSendMessage = async () => {
     const text = inputValue.trim();
     if (!text || isTyping) return;
 
-    // Tạo message user
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
@@ -66,35 +63,31 @@ export default function FullVersionPage() {
       timestamp: new Date(),
     };
 
-    // Build payloadMessages ngay lập tức (không phụ thuộc vào setState async)
     const payloadMessages = [...messages, userMessage];
-
-    // cập nhật giao diện ngay
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
 
     try {
-      // Lấy profile từ ref (đã chuẩn hoá lúc load)
       const profile = profileRef.current || { userName: 'bạn', type: null };
 
-      // Gửi request lên API với payloadMessages (chứa userMessage)
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: payloadMessages.map(m => ({
+          messages: payloadMessages.map((m) => ({
             role: m.type === 'user' ? 'user' : 'assistant',
             content: m.content,
           })),
-          profile, // gửi object profile đầy đủ (userName, type, ...)
+          profile,
         }),
       });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data = await res.json();
       const aiResponse = data?.response || 'Xin lỗi, mình chưa hiểu ý bạn 😅';
 
-      // append AI response
       setMessages((prev) => [
         ...prev,
         {
@@ -127,15 +120,38 @@ export default function FullVersionPage() {
   return (
     <div className="flex flex-col h-screen bg-gradient-to-b from-green-50 to-white">
       {/* Header */}
-      <div className="p-3 bg-white border-b border-gray-200 sticky top-0 z-20">
+      <div className="flex items-center justify-between p-3 bg-white border-b border-gray-200 sticky top-0 z-20">
+        <button
+          onClick={() => router.push('/result')}
+          className="flex items-center text-gray-600 hover:text-green-600 transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-5 h-5 mr-1"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span className="text-sm font-medium">Quay lại</span>
+        </button>
+
         <h1 className="text-base font-semibold text-gray-800">🌿 Productivity Assistant</h1>
+        <div className="w-10" />
       </div>
 
       {/* Chat area */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3 pb-24">
         {messages.map((msg) => (
           <div key={msg.id} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${msg.type === 'user' ? 'bg-green-500 text-white rounded-br-none' : 'bg-gray-100 text-gray-800 rounded-bl-none'}`}>
+            <div
+              className={`max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${msg.type === 'user'
+                ? 'bg-green-500 text-white rounded-br-none'
+                : 'bg-gray-100 text-gray-800 rounded-bl-none'
+                }`}
+            >
               {msg.content}
             </div>
           </div>
