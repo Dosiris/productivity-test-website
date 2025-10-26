@@ -119,77 +119,77 @@ export function calculatePersonalityScore(answers: number[]): PersonalityScore {
     overAchiever: 0
   };
 
-  // Logic tính điểm cho từng câu hỏi với thứ tự đáp án đã xáo trộn
+  // Logic tính điểm cho từng câu hỏi theo bảng mới
   answers.forEach((answer, questionIndex) => {
     switch (questionIndex) {
-      case 0: // Không có deadline
-        if (answer === 0) score.balancer += 4;       // nghỉ thoải mái
-        if (answer === 1) score.overAchiever += 4;   // tranh thủ sắp xếp
-        if (answer === 2) score.chiller += 4;        // làm nhẹ cho vui
-        if (answer === 3) score.busyBee += 4;        // vẫn làm tiếp
+      case 0: // Câu 1
+        if (answer === 0) score.balancer += 4;
+        if (answer === 1) score.overAchiever += 4;
+        if (answer === 2) score.chiller += 4;
+        if (answer === 3) score.busyBee += 4;
         break;
 
-      case 1: // Làm việc 5 tiếng liên tục
-        if (answer === 0) score.overAchiever += 4;   // làm cho xong
-        if (answer === 1) score.chiller += 4;        // nghỉ hợp lý
-        if (answer === 2) score.busyBee += 4;        // thêm chút nữa
-        if (answer === 3) score.balancer += 4;       // làm có giới hạn
+      case 1: // Câu 2
+        if (answer === 0) score.overAchiever += 4;
+        if (answer === 1) score.chiller += 4;
+        if (answer === 2) score.busyBee += 4;
+        if (answer === 3) score.balancer += 4;
         break;
 
-      case 2: // Đồng đội chậm tiến độ
-        if (answer === 0) score.busyBee += 2;        // bình tĩnh
-        if (answer === 1) score.balancer += 4;       // hỗ trợ, sắp xếp lại
-        if (answer === 2) score.overAchiever += 4;   // gánh thêm việc
-        if (answer === 3) score.chiller += 2;        // thoải mái, không áp lực
+      case 2: // Câu 3
+        if (answer === 0) score.busyBee += 2;
+        if (answer === 1) score.balancer += 4;
+        if (answer === 2) score.overAchiever += 4;
+        if (answer === 3) score.chiller += 2;
         break;
 
-      case 3: // Hoàn thành dự án lớn
-        if (answer === 0) score.balancer += 3;       // vui vì xong
-        if (answer === 1) score.overAchiever += 4;   // tự thưởng vì nỗ lực
-        if (answer === 2) score.chiller += 4;        // muốn làm ngay việc mới
-        if (answer === 3) score.busyBee += 2;        // nhẹ nhõm, hướng tới sau
+      case 3: // Câu 4
+        if (answer === 0) score.balancer += 2;
+        if (answer === 1) score.overAchiever += 4;
+        if (answer === 2) score.chiller += 4;
+        if (answer === 3) score.busyBee += 2;
         break;
 
-      case 4: // Được khen năng suất
-        if (answer === 0) score.balancer += 4;       // vui nhẹ, không quan trọng
-        if (answer === 1) score.overAchiever += 4;   // hài lòng được ghi nhận
-        if (answer === 2) score.busyBee += 2;        // muốn giữ phong độ
-        if (answer === 3) score.chiller += 2;        // không đặt nặng
+      case 4: // Câu 5
+        if (answer === 0) score.balancer += 4;
+        if (answer === 1) score.overAchiever += 1;
+        if (answer === 2) score.chiller += 4;
+        if (answer === 3) score.busyBee += 1;
         break;
 
-      case 5: // Email cuối tuần
-        if (answer === 0) score.balancer += 4;       // không mở
-        if (answer === 1) score.overAchiever += 2;   // trả lời nhẹ
-        if (answer === 2) score.chiller += 3;        // xem, làm nếu tiện
-        if (answer === 3) score.busyBee += 2;        // làm ngay
+      case 5: // Câu 6
+        if (answer === 0) score.busyBee += 4;
+        if (answer === 1) score.chiller += 1;
+        if (answer === 2) score.balancer += 2;
+        if (answer === 3) score.overAchiever += 4;
         break;
 
-      case 6: // Bắt đầu ngày mới
-        if (answer === 0) score.busyBee += 4;        // thích làm
-        if (answer === 1) score.chiller += 2;        // hứng thú vừa phải
-        if (answer === 2) score.balancer += 3;       // làm có kế hoạch
-        if (answer === 3) score.overAchiever += 4;   // sợ chậm tiến độ
+      case 6: // Câu 7
+        if (answer === 0) score.overAchiever += 4;
+        if (answer === 1) score.balancer += 2;
+        if (answer === 2) score.busyBee += 2;
+        if (answer === 3) score.chiller += 4;
         break;
 
-      case 7: // Thấy người khác vẫn làm việc
-        if (answer === 0) score.overAchiever += 4;   // quay lại làm
-        if (answer === 1) score.balancer += 3;       // cảm thông
-        if (answer === 2) score.busyBee += 2;        // làm nhẹ nhàng
-        if (answer === 3) score.chiller += 4;        // vẫn nghỉ ngơi
+      case 7: // Câu 8
+        if (answer === 0) score.chiller += 4;
+        if (answer === 1) score.overAchiever += 4;
+        if (answer === 2) score.balancer += 2;
+        if (answer === 3) score.busyBee += 2;
         break;
 
-      case 8: // Quên ăn khi làm việc
-        if (answer === 0) score.chiller += 4;        // không bao giờ
-        if (answer === 1) score.overAchiever += 4;   // thỉnh thoảng
-        if (answer === 2) score.balancer += 3;       // thỉnh thoảng thôi
-        if (answer === 3) score.busyBee += 2;        // khá thường
+      case 8: // Câu 9
+        if (answer === 0) score.balancer += 4;
+        if (answer === 1) score.chiller += 4;
+        if (answer === 2) score.overAchiever += 1;
+        if (answer === 3) score.busyBee += 1;
         break;
 
-      case 9: // Định nghĩa năng suất
-        if (answer === 0) score.balancer += 4;       // có giới hạn
-        if (answer === 1) score.chiller += 4;        // tập trung chất lượng
-        if (answer === 2) score.overAchiever += 2;   // duy trì phong độ
-        if (answer === 3) score.busyBee += 2;        // công nhận & kết quả
+      case 9: // Câu 10
+        if (answer === 0) score.balancer += 4;
+        if (answer === 1) score.chiller += 4;
+        if (answer === 2) score.overAchiever += 1;
+        if (answer === 3) score.busyBee += 1;
         break;
     }
   });
