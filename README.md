@@ -1,14 +1,3 @@
-# HOW TO SETUP AI LOCAL, PLEASE DO THESE INSTRUCTION
--First create file outside src file and place same level with (file system) such as package.json, package-lock.son,... 
-
--Second, place name .env.local
-Paste these code into the file 
-
-OPENROUTER_API_KEY=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
-
-NEXT_PUBLIC_API_URL=http://localhost:3000/api
-
--At last, follow the rule Getting Stared the run app and enjoy ^^
 
 
 ## Getting Started
