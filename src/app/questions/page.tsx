@@ -114,21 +114,41 @@ const questions: Question[] = [
 ];
 
 const addLineBreaks = (text: string) => {
-  if (text.length > 50) {
+  if (text.length > 40) {
     const words = text.split(' ');
     const lines: string[] = [];
     let currentLine = '';
 
-    words.forEach(word => {
-      if ((currentLine + ' ' + word).trim().length > 50) {
-        lines.push(currentLine.trim());
-        currentLine = word;
+    words.forEach((word, index) => {
+      const testLine = currentLine + (currentLine ? ' ' : '') + word;
+      
+      // Kiểm tra nếu thêm từ này sẽ vượt quá giới hạn
+      if (testLine.length > 40) {
+        // Nếu dòng hiện tại không rỗng, lưu nó
+        if (currentLine) {
+          lines.push(currentLine.trim());
+          currentLine = word;
+        } else {
+          // Nếu từ đơn lẻ quá dài, chia nhỏ
+          lines.push(word);
+          currentLine = '';
+        }
       } else {
-        currentLine += (currentLine ? ' ' : '') + word;
+        currentLine = testLine;
       }
     });
 
-    if (currentLine) lines.push(currentLine.trim());
+    // Thêm dòng cuối cùng
+    if (currentLine) {
+      lines.push(currentLine.trim());
+    }
+
+    // Tối ưu hóa: nếu có 3 dòng và dòng cuối quá ngắn, gộp với dòng trước
+    if (lines.length === 3 && lines[2].length < 15) {
+      lines[1] = lines[1] + ' ' + lines[2];
+      lines.pop();
+    }
+
     return (
       <>
         {lines.map((line, i) => (
