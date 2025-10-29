@@ -2,7 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { calculatePersonalityScore, determinePersonalityType, personalityTypes } from '@/lib/personalityScoring';
+import {
+  calculatePersonalityScore,
+  determinePersonalityType,
+  personalityTypes,
+} from '@/lib/personalityScoring';
 
 interface Question {
   id: number;
@@ -46,7 +50,7 @@ const questions: Question[] = [
     question: "Khi hoàn thành một dự án lớn, cảm xúc của bạn thường là...",
     options: [
       "Hài lòng và tự thưởng cho bản thân vì đã nỗ lực.",
-      "Vui và có cảm giác hứng khỏi muốn bắt tay ngay vào đầu việc tiếp theo để giữ mức năng suất.",
+      "Vui và có cảm giác hứng khởi muốn bắt tay ngay vào đầu việc tiếp theo để giữ mức năng suất.",
       "Cảm thấy vui vì đã hoàn thành, cuối cùng cũng được nghỉ ngơi.",
       "Cảm thấy nhẹ nhõm vì cuối cùng cũng đã hoàn thành, mong muốn làm tốt hơn ở lần sau."
     ]
@@ -119,64 +123,17 @@ const addLineBreaks = (text: string) => {
     const lines: string[] = [];
     let currentLine = '';
 
-    words.forEach((word, index) => {
+    words.forEach((word) => {
       const testLine = currentLine + (currentLine ? ' ' : '') + word;
-      
-      // Kiểm tra nếu thêm từ này sẽ vượt quá giới hạn
       if (testLine.length > 35) {
-        // Nếu dòng hiện tại không rỗng, lưu nó
-        if (currentLine) {
-          lines.push(currentLine.trim());
-          currentLine = word;
-        } else {
-          // Nếu từ đơn lẻ quá dài, chia nhỏ
-          lines.push(word);
-          currentLine = '';
-        }
+        lines.push(currentLine.trim());
+        currentLine = word;
       } else {
         currentLine = testLine;
       }
     });
 
-    // Thêm dòng cuối cùng
-    if (currentLine) {
-      lines.push(currentLine.trim());
-    }
-
-    // Tối ưu hóa mạnh mẽ: ưu tiên 2 dòng, chỉ cho phép 3 dòng khi thực sự cần thiết
-    if (lines.length === 3) {
-      // Nếu dòng cuối quá ngắn (< 12 ký tự), gộp với dòng trước
-      if (lines[2].length < 12) {
-        lines[1] = lines[1] + ' ' + lines[2];
-        lines.pop();
-      }
-      // Nếu dòng giữa quá ngắn (< 10 ký tự), gộp với dòng đầu
-      else if (lines[1].length < 10) {
-        lines[0] = lines[0] + ' ' + lines[1];
-        lines.splice(1, 1);
-      }
-      // Nếu cả 3 dòng đều ngắn, thử gộp lại thành 2 dòng cân bằng hơn
-      else if (lines[0].length < 20 && lines[1].length < 20 && lines[2].length < 20) {
-        const combined = lines.join(' ');
-        const midPoint = Math.floor(combined.length / 2);
-        const words = combined.split(' ');
-        let firstLine = '';
-        let secondLine = '';
-        
-        for (const word of words) {
-          if ((firstLine + ' ' + word).trim().length <= midPoint + 5) {
-            firstLine += (firstLine ? ' ' : '') + word;
-          } else {
-            secondLine += (secondLine ? ' ' : '') + word;
-          }
-        }
-        
-        lines[0] = firstLine.trim();
-        lines[1] = secondLine.trim();
-        lines.pop();
-      }
-    }
-
+    if (currentLine) lines.push(currentLine.trim());
     return (
       <>
         {lines.map((line, i) => (
@@ -208,61 +165,43 @@ export default function QuestionsPage() {
       return;
     }
 
-    // Khi ở câu cuối: kiểm tra đã trả lời hết 10 câu chưa
     const unansweredIndex = answers.findIndex(a => a === null);
     if (unansweredIndex !== -1) {
-      // đưa người dùng về câu chưa trả lời (hoặc thông báo)
       setCurrentQuestion(unansweredIndex);
-      // thông báo ngắn gọn
       alert(`Bạn chưa trả lời câu ${unansweredIndex + 1}. Vui lòng trả lời tất cả câu trước khi nộp.`);
       return;
     }
 
-    // Tính điểm (answers đã đầy)
     try {
-      const numericAnswers = answers as number[]; // an toàn vì đã kiểm tra không còn null
+      const numericAnswers = answers as number[];
       const score = calculatePersonalityScore(numericAnswers);
       const typeKey = determinePersonalityType(score);
-      const typeData = personalityTypes[typeKey] || null;
+      const typeData = personalityTypes[typeKey];
 
-      // Lấy tên người dùng: ưu tiên key 'userName', fallback vào personalityFullData.userName
-      let userName = localStorage.getItem('userName') || '';
-      if (!userName) {
-        const storedFull = localStorage.getItem('personalityFullData');
-        if (storedFull) {
-          try {
-            const parsed = JSON.parse(storedFull);
-            if (parsed?.userName) userName = parsed.userName;
-          } catch (e) {
-            // ignore parse error
-          }
-        }
+      // Lấy tên người dùng từ localStorage
+      let userName = '';
+      const storedFull = localStorage.getItem('personalityFullData');
+      if (storedFull) {
+        try {
+          const parsed = JSON.parse(storedFull);
+          userName = parsed?.userName || '';
+        } catch { }
       }
-      if (!userName) userName = 'Guest';
+      if (!userName) userName = localStorage.getItem('userName') || 'Guest';
 
-      // Lưu kết quả tóm tắt cho /result
-      const personalityResult = {
-        type: typeKey,
-        score,
-        answers: numericAnswers,
-      };
-      localStorage.setItem('personalityResult', JSON.stringify(personalityResult));
-
-      // Lưu full data (dùng trong /full-version chat)
-      const fullData = {
+      // ✅ Lưu dữ liệu chuẩn vào localStorage
+      const personalityFullData = {
         userName,
-        type: typeData, // object chi tiết (name, image, tips...)
         typeKey,
+        typeData,
         score,
         answers: numericAnswers,
-        timestamp: new Date().toISOString(),
+        timestamp: Date.now(),
       };
-      localStorage.setItem('personalityFullData', JSON.stringify(fullData));
-
-      // Lưu riêng userName để các trang khác dễ đọc
+      localStorage.setItem('personalityFullData', JSON.stringify(personalityFullData));
       localStorage.setItem('userName', userName);
 
-      // Chuyển trang
+      // Sau khi lưu xong, điều hướng sang trang kết quả
       router.push('/result');
     } catch (err) {
       console.error('Lỗi khi tính điểm hoặc lưu localStorage:', err);
@@ -279,20 +218,22 @@ export default function QuestionsPage() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Background */}
       <div className="absolute inset-0">
         <img src="/images/hero/image 1.png" alt="Background" className="w-full h-full object-cover" />
       </div>
 
-      {/* Progress bar */}
       <div className="relative z-10 w-full h-2 bg-gray-200">
         <div className="h-full bg-orange-500 transition-all duration-300" style={{ width: `${progress}%` }}></div>
       </div>
 
-      {/* Nội dung câu hỏi */}
       <div className="relative z-10 px-4 py-8 max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto">
         <div className="mb-6 md:mb-8 text-center">
-          <img src={`/images/Questions/${currentQ.id}.png`} alt={`Question ${currentQ.id}`} className="mx-auto max-w-full h-auto" style={{ maxHeight: '300px' }} />
+          <img
+            src={`/images/Questions/${currentQ.id}.png`}
+            alt={`Question ${currentQ.id}`}
+            className="mx-auto max-w-full h-auto"
+            style={{ maxHeight: '300px' }}
+          />
         </div>
 
         <div className="space-y-8 md:space-y-10 lg:space-y-12">
@@ -300,9 +241,13 @@ export default function QuestionsPage() {
             <button
               key={index}
               onClick={() => handleAnswer(index)}
-              className={`w-full pixel-option-button transition-all duration-200 ${answers[currentQuestion] === index ? 'selected-answer' : 'hover:opacity-90'}`}
+              className={`w-full pixel-option-button transition-all duration-200 ${answers[currentQuestion] === index ? 'selected-answer' : 'hover:opacity-90'
+                }`}
             >
-              <span className={`text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-medium cautraloi-font ${answers[currentQuestion] === index ? 'text-orange-600 font-semibold' : 'text-black'}`}>
+              <span
+                className={`text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-medium cautraloi-font ${answers[currentQuestion] === index ? 'text-orange-600 font-semibold' : 'text-black'
+                  }`}
+              >
                 {addLineBreaks(option)}
               </span>
             </button>
@@ -310,12 +255,22 @@ export default function QuestionsPage() {
         </div>
 
         <div className="flex justify-between items-center mt-6 md:mt-8 gap-3 md:gap-4">
-          <button onClick={handleBack} disabled={currentQuestion === 0} className="relative w-24 md:w-28 lg:w-32 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+          <button
+            onClick={handleBack}
+            disabled={currentQuestion === 0}
+            className="relative w-24 md:w-28 lg:w-32 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          >
             <img src="/images/hero/back.png" alt="Back button" className="w-full h-auto" />
-            <span className="absolute inset-0 flex items-center justify-center text-black text-sm md:text-base lg:text-lg font-bold cauhoi-font">← BACK</span>
+            <span className="absolute inset-0 flex items-center justify-center text-black text-sm md:text-base lg:text-lg font-bold cauhoi-font">
+              ← BACK
+            </span>
           </button>
 
-          <button onClick={handleNext} disabled={answers[currentQuestion] === null} className="relative w-24 md:w-28 lg:w-32 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+          <button
+            onClick={handleNext}
+            disabled={answers[currentQuestion] === null}
+            className="relative w-24 md:w-28 lg:w-32 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          >
             <img src="/images/hero/go.png" alt="Next button" className="w-full h-auto" />
             <span className="absolute inset-0 flex items-center justify-center text-black text-sm md:text-base lg:text-lg font-bold cauhoi-font">
               {currentQuestion === questions.length - 1 ? 'SUBMIT →' : 'NEXT →'}

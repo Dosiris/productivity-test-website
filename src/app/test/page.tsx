@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { savePersonalityProfile } from '@/lib/storage';
+import { personalityTypes } from '@/lib/personalityScoring'; // ✅ để lấy dữ liệu typeData mặc định
 
 export default function TestPage() {
   const [name, setName] = useState('');
@@ -11,30 +13,26 @@ export default function TestPage() {
     const trimmedName = name.trim();
     if (!trimmedName) return;
 
-    // 🔹 Lấy dữ liệu hiện có (nếu có)
-    const existingData = localStorage.getItem('personalityFullData');
-    const parsedData = existingData ? JSON.parse(existingData) : {};
+    // ✅ Khởi tạo profile trống ban đầu, có đủ typeData
+    savePersonalityProfile({
+      userName: trimmedName,
+      answers: [],
+      score: {
+        busyBee: 0,
+        chiller: 0,
+        balancer: 0,
+        overAchiever: 0,
+      },
+      typeKey: 'balancer',
+      typeData: personalityTypes['balancer'], // ✅ thêm dòng này
+      timestamp: Date.now(),
+    });
 
-    // 🔹 Cập nhật hoặc khởi tạo dữ liệu mới
-    const updatedData = {
-      ...parsedData,
-      userName: trimmedName, // 👉 Lưu tên người dùng tại đây
-      answers: [], // danh sách câu trả lời
-      type: null, // kiểu tính cách (cập nhật sau khi làm xong test)
-      score: null, // điểm số (cập nhật sau khi làm xong test)
-      timestamp: new Date().toISOString(),
-    };
-
-    // 🔹 Lưu duy nhất 1 key trong localStorage
-    localStorage.setItem('personalityFullData', JSON.stringify(updatedData));
-
-    // 🔹 Chuyển sang trang câu hỏi
     router.push('/questions');
   };
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center px-4">
-      {/* Hình nền */}
       <div className="absolute inset-0">
         <img
           src="/images/hero/image 1.png"
@@ -43,9 +41,7 @@ export default function TestPage() {
         />
       </div>
 
-      {/* Nội dung chính */}
       <div className="relative z-10 text-center max-w-2xl mx-auto w-full">
-        {/* Logo */}
         <div className="mb-8 md:mb-10">
           <img
             src="/images/hero/Layer 2 1.png"
@@ -54,7 +50,6 @@ export default function TestPage() {
           />
         </div>
 
-        {/* Ô nhập tên */}
         <div className="mb-6 md:mb-8">
           <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
             <img
@@ -73,7 +68,6 @@ export default function TestPage() {
           </div>
         </div>
 
-        {/* Nút Next */}
         <div>
           <button
             onClick={handleNext}
