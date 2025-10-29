@@ -1,0 +1,98 @@
+{
+    "topic": "Toxic Productivity",
+    "global": {
+        "definition": "Toxic productivity là trạng thái khi một người luôn bị thôi thúc phải làm việc không ngừng nghỉ để cảm thấy có giá trị. Ban đầu tưởng là tích cực, nhưng thực chất dẫn đến stress, kiệt sức, mất cân bằng cuộc sống.",
+        "signs": [
+            "Cảm thấy tội lỗi khi nghỉ",
+            "Làm việc quá giờ",
+            "Mất ngủ, cáu gắt, hiệu suất giảm",
+            "Khó thư giãn, mất cân bằng"
+        ],
+        "causes": [
+            "Văn hoá hustle, mạng xã hội phóng đại thành công",
+            "Sợ thất bại, cầu toàn, làm việc để tránh lo âu",
+            "Thiếu ranh giới, khối lượng công việc cao, hậu COVID"
+        ],
+        "stages": [
+            "Nỗ lực thừa",
+            "Ám ảnh bận rộn",
+            "Tự trừng phạt",
+            "Kiệt sức hoàn toàn"
+        ]
+    },
+    "types": {
+        "chiller": {
+            "id": "chiller",
+            "name": "The Chiller",
+            "shortSummary": "Sống chill, ưu tiên cuộc sống, ít stress, nhưng dễ trì hoãn.",
+            "riskLevel": "low",
+            "indicators": [
+                "Làm vừa đủ",
+                "Không cảm thấy tội lỗi khi nghỉ",
+                "Dễ trì hoãn"
+            ],
+            "tips": [
+                "Chill có chiến lược, chia nhỏ mục tiêu.",
+                "Thêm yếu tố thú vị vào công việc."
+            ],
+            "kbSummary": "Nhóm Chiller có nguy cơ toxic productivity rất thấp — họ biết thư giãn và cân bằng, nhưng đôi khi trì hoãn. Gợi ý: duy trì sự chill có mục tiêu, và bổ sung thử thách nhỏ để giữ động lực."
+        },
+        "balancer": {
+            "id": "balancer",
+            "name": "The Balancer",
+            "shortSummary": "Cân bằng giữa công việc và nghỉ ngơi, kiểm soát cảm xúc tốt.",
+            "riskLevel": "low",
+            "indicators": [
+                "Nghỉ ngơi hợp lý",
+                "Không làm quá giờ",
+                "Hiệu suất ổn định"
+            ],
+            "tips": [
+                "Thử thách bản thân với mục tiêu mới.",
+                "Đa dạng hoá hoạt động để tránh nhàm chán."
+            ],
+            "kbSummary": "Balancer có mức độ toxic thấp. Họ kiểm soát cảm xúc tốt, biết nghỉ hợp lý, nhưng nên chủ động làm mới bản thân để tránh rơi vào vùng an toàn."
+        },
+        "busyBee": {
+            "id": "busyBee",
+            "name": "The Busy Bee",
+            "shortSummary": "Luôn bận rộn, năng lượng cao nhưng dễ burnout.",
+            "riskLevel": "medium",
+            "indicators": [
+                "Làm việc nhiều giờ liên tục",
+                "Khó dừng khi mệt",
+                "Cảm thấy tội lỗi khi nghỉ"
+            ],
+            "tips": [
+                "Nghỉ 10 phút mỗi 2–3 Pomodoro.",
+                "Đo hiệu quả bằng kết quả chứ không phải thời gian.",
+                "Thiết lập ranh giới giờ làm/giờ nghỉ rõ ràng."
+            ],
+            "kbSummary": "Busy Bee thường có năng lượng dồi dào và chủ động, nhưng dễ bị kiệt sức vì luôn muốn làm nhiều hơn. Nên học cách nghỉ ngắn xen kẽ, đặt giới hạn rõ ràng và đánh giá hiệu quả bằng kết quả chứ không phải khối lượng công việc."
+        },
+        "overAchiever": {
+            "id": "overAchiever",
+            "name": "The Over Achiever",
+            "shortSummary": "Cầu toàn, gắn giá trị bản thân với kết quả, dễ stress và kiệt sức.",
+            "riskLevel": "high",
+            "indicators": [
+                "Luôn cảm thấy chưa đủ tốt",
+                "Làm việc kể cả khi kiệt sức",
+                "Khó thư giãn hoặc giao việc cho người khác"
+            ],
+            "tips": [
+                "Thực hành lòng tự cảm thông, đừng quá khắt khe với bản thân.",
+                "Chấp nhận rằng 80% là đủ tốt.",
+                "Nghỉ có chủ đích để tái tạo năng lượng."
+            ],
+            "kbSummary": "Over Achiever có mức độ toxic productivity cao — họ thường gắn giá trị bản thân với thành tích, dễ căng thẳng và tự ép mình vượt giới hạn. Nên học cách nghỉ ngơi có mục đích, chấp nhận khuyết điểm và tập trung vào tiến bộ thay vì hoàn hảo."
+        }
+    },
+    "theory": "Theo Malinowska & Tokarz (2014), Andreassen et al. (2010), van Wijhe et al. (2013): toxic productivity là sự mất cân bằng giữa hành vi, nhận thức, cảm xúc. 4 archetype tương ứng mức độ: Chiller (rất thấp), Balancer (thấp), Busy Bee (trung bình), OverAchiever (cao).",
+    "improvement": [
+        "Học cách nghỉ có mục tiêu, không gắn giá trị bản thân vào năng suất.",
+        "Thiết lập ranh giới thời gian và ưu tiên sức khỏe tinh thần.",
+        "Giảm so sánh và đánh giá bản thân bằng tiến bộ cá nhân.",
+        "Xem nghỉ ngơi là khoản đầu tư cho hiệu suất dài hạn."
+    ]
+}

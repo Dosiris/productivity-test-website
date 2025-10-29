@@ -7,6 +7,11 @@ import {
   determinePersonalityType,
   personalityTypes,
 } from '@/lib/personalityScoring';
+import {
+  getPersonalityProfile,
+  savePersonalityProfile,
+  updatePersonalityResults,
+} from '@/lib/storage';
 
 interface Question {
   id: number;
@@ -165,7 +170,8 @@ export default function QuestionsPage() {
       return;
     }
 
-    const unansweredIndex = answers.findIndex(a => a === null);
+    // ✅ Kiểm tra câu chưa trả lời
+    const unansweredIndex = answers.findIndex((a) => a === null);
     if (unansweredIndex !== -1) {
       setCurrentQuestion(unansweredIndex);
       alert(`Bạn chưa trả lời câu ${unansweredIndex + 1}. Vui lòng trả lời tất cả câu trước khi nộp.`);
@@ -178,30 +184,32 @@ export default function QuestionsPage() {
       const typeKey = determinePersonalityType(score);
       const typeData = personalityTypes[typeKey];
 
-      // Lấy tên người dùng từ localStorage
-      let userName = '';
-      const storedFull = localStorage.getItem('personalityFullData');
-      if (storedFull) {
-        try {
-          const parsed = JSON.parse(storedFull);
-          userName = parsed?.userName || '';
-        } catch { }
+      // ✅ Lấy profile hiện tại từ localStorage
+      const currentProfile = getPersonalityProfile();
+
+      if (currentProfile) {
+        // Cập nhật kết quả vào profile cũ
+        updatePersonalityResults({
+          ...currentProfile,
+          answers: numericAnswers,
+          score,
+          typeKey,
+          typeData,
+          timestamp: Date.now(),
+        });
+      } else {
+        // Nếu chưa có profile (trường hợp user vào thẳng link này)
+        savePersonalityProfile({
+          userName: 'Guest',
+          answers: numericAnswers,
+          score,
+          typeKey,
+          typeData,
+          timestamp: Date.now(),
+        });
       }
-      if (!userName) userName = localStorage.getItem('userName') || 'Guest';
 
-      // ✅ Lưu dữ liệu chuẩn vào localStorage
-      const personalityFullData = {
-        userName,
-        typeKey,
-        typeData,
-        score,
-        answers: numericAnswers,
-        timestamp: Date.now(),
-      };
-      localStorage.setItem('personalityFullData', JSON.stringify(personalityFullData));
-      localStorage.setItem('userName', userName);
-
-      // Sau khi lưu xong, điều hướng sang trang kết quả
+      // ✅ Điều hướng sang trang kết quả
       router.push('/result');
     } catch (err) {
       console.error('Lỗi khi tính điểm hoặc lưu localStorage:', err);

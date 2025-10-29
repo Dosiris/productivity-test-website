@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { personalityTypes, PersonalityType } from '@/lib/personalityScoring';
+import { getPersonalityProfile } from '@/lib/storage';
 
 export default function ResultPage() {
   const router = useRouter();
@@ -12,13 +13,12 @@ export default function ResultPage() {
 
   useEffect(() => {
     try {
-      const storedFull = localStorage.getItem('personalityFullData');
+      const profile = getPersonalityProfile();
 
-      if (storedFull) {
-        const parsed = JSON.parse(storedFull);
-        const { userName, typeKey, typeData } = parsed;
+      if (profile) {
+        const { userName, typeKey, typeData } = profile;
 
-        // Dùng typeData (object) nếu có, fallback qua personalityTypes[typeKey]
+        // Ưu tiên typeData (đã lưu sẵn object), fallback qua personalityTypes[typeKey]
         const resolvedType =
           typeData && typeData.id
             ? typeData
@@ -29,14 +29,21 @@ export default function ResultPage() {
         if (resolvedType) {
           setPersonalityType(resolvedType);
           setUserName(userName || '');
+        } else {
+          // Nếu không resolve được type thì quay lại test
+          router.replace('/test');
         }
+      } else {
+        // Nếu chưa có profile thì về trang test
+        router.replace('/test');
       }
     } catch (err) {
-      console.error('Lỗi khi đọc localStorage:', err);
+      console.error('Lỗi khi đọc profile:', err);
+      router.replace('/test');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [router]);
 
   // Loading
   if (loading) {

@@ -10,100 +10,76 @@ export interface PersonalityProfile {
     timestamp: number;
 }
 
-/**
- * 🔹 Lưu hồ sơ tính cách người dùng vào localStorage
- */
+/** 🔹 Lưu hồ sơ tính cách người dùng */
 export function savePersonalityProfile(profile: PersonalityProfile) {
     try {
         localStorage.setItem("personalityProfile", JSON.stringify(profile));
+        localStorage.setItem("userName", profile.userName);
     } catch (error) {
         console.error("❌ Lỗi khi lưu personalityProfile:", error);
     }
 }
 
-/**
- * 🔹 Lấy hồ sơ tính cách người dùng từ localStorage
- */
+/** 🔹 Lấy hồ sơ tính cách người dùng */
 export function getPersonalityProfile(): PersonalityProfile | null {
     try {
         const raw = localStorage.getItem("personalityProfile");
         if (!raw) return null;
-
         const data = JSON.parse(raw) as PersonalityProfile;
 
-        // Validate typeKey hợp lệ
         if (!personalityTypes[data.typeKey]) {
             console.warn("⚠️ typeKey không hợp lệ, reset profile");
             return null;
         }
 
-        // Đảm bảo có đầy đủ typeData
-        return {
-            ...data,
-            typeData: personalityTypes[data.typeKey],
-        };
+        return { ...data, typeData: personalityTypes[data.typeKey] };
     } catch (error) {
         console.error("❌ Lỗi khi đọc personalityProfile:", error);
         return null;
     }
 }
 
-/**
- * 🔹 Xóa toàn bộ dữ liệu người dùng (dùng khi làm lại bài test)
- */
+/** 🔹 Xóa dữ liệu */
 export function clearPersonalityProfile() {
     try {
         localStorage.removeItem("personalityProfile");
+        localStorage.removeItem("userName");
     } catch (error) {
         console.error("❌ Lỗi khi xóa personalityProfile:", error);
     }
 }
 
-/**
- * 🔹 Cập nhật lại tên người dùng trong profile hiện tại
- */
+/** 🔹 Cập nhật tên người dùng */
 export function updateUserName(name: string) {
     const profile = getPersonalityProfile();
     if (!profile) return;
 
+    const updated: PersonalityProfile = { ...profile, userName: name };
+    savePersonalityProfile(updated);
+}
+
+/** 🔹 Cập nhật kết quả bài test mới */
+export function updatePersonalityResults(newData: {
+    userName?: string;
+    answers: number[];
+    score: PersonalityScore;
+    typeKey: keyof typeof personalityTypes;
+    typeData: (typeof personalityTypes)[keyof typeof personalityTypes];
+    timestamp?: number;
+}) {
     const updated: PersonalityProfile = {
-        ...profile,
-        userName: name,
+        userName: newData.userName ?? "Guest",
+        answers: newData.answers,
+        score: newData.score,
+        typeKey: newData.typeKey,
+        typeData: newData.typeData,
+        timestamp: newData.timestamp ?? Date.now(),
     };
 
     savePersonalityProfile(updated);
 }
 
-/**
- * 🔹 Lưu tạm câu trả lời giữa chừng
- */
-export function saveAnswers(answers: number[]) {
-    const profile = getPersonalityProfile();
-
-    // Tự động lấy lại typeData nếu có typeKey
-    const fallbackTypeKey = profile?.typeKey ?? "balancer";
-    const typeData = personalityTypes[fallbackTypeKey];
-
-    const updated: PersonalityProfile = {
-        userName: profile?.userName ?? "",
-        typeKey: fallbackTypeKey,
-        typeData,
-        score: profile?.score ?? {
-            busyBee: 0,
-            chiller: 0,
-            balancer: 0,
-            overAchiever: 0,
-        },
-        answers,
-        timestamp: Date.now(),
-    };
-
-    savePersonalityProfile(updated);
-}
-
-/**
- * 🔹 Reset toàn bộ (để bắt đầu lại từ đầu)
- */
+/** 🔹 Reset toàn bộ dữ liệu */
 export function resetAllStorage() {
     clearPersonalityProfile();
 }

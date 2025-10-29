@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { getPersonalityProfile } from '@/lib/storage';
+import { personalityTypes } from '@/lib/personalityScoring';
 
 interface Message {
   id: string;
@@ -21,24 +23,35 @@ export default function FullVersionPage() {
   // 🔹 Khi load trang, đọc dữ liệu người dùng từ localStorage
   useEffect(() => {
     try {
-      const storedFull = typeof window !== 'undefined' ? localStorage.getItem('personalityFullData') : null;
-      const storedUserName = typeof window !== 'undefined' ? localStorage.getItem('userName') : null;
-      const full = storedFull ? JSON.parse(storedFull) : null;
+      const profile = getPersonalityProfile();
 
-      profileRef.current = {
-        userName: storedUserName || full?.userName || full?.name || 'bạn',
-        type: full?.type ?? null,
-      };
+      if (profile) {
+        const { userName, typeKey, typeData } = profile;
+        const resolvedType =
+          typeData?.id
+            ? typeData
+            : typeKey
+              ? personalityTypes[typeKey]
+              : null;
+
+        profileRef.current = {
+          userName: userName || 'bạn',
+          type: resolvedType,
+        };
+      } else {
+        profileRef.current = { userName: 'bạn', type: null };
+      }
     } catch (err) {
+      console.error('⚠️ Lỗi khi đọc profile:', err);
       profileRef.current = { userName: 'bạn', type: null };
-      console.error('⚠️ Lỗi khi đọc profile từ localStorage:', err);
     }
 
+    // ✅ Tin nhắn chào đầu tiên
     const firstMessage: Message = {
       id: 'welcome',
       type: 'ai',
       content: profileRef.current?.type
-        ? `Xin chào ${profileRef.current.userName}! 👋 Mình là trợ lý AI giúp bạn cân bằng giữa công việc và nghỉ ngơi. Mình đã xem kết quả bài test của bạn rồi (${profileRef.current.type?.name || 'chưa rõ kiểu tính cách'}). Bạn có muốn mình tư vấn dựa trên kết quả đó không?`
+        ? `Xin chào ${profileRef.current.userName}! 👋 Mình là trợ lý AI giúp bạn cân bằng giữa công việc và nghỉ ngơi. Mình đã xem kết quả bài test của bạn rồi (${profileRef.current.type?.title || profileRef.current.type?.name || 'chưa rõ kiểu tính cách'}). Bạn có muốn mình tư vấn dựa trên kết quả đó không?`
         : `Xin chào ${profileRef.current?.userName || 'bạn'}! 👋 Mình là trợ lý AI giúp bạn cân bằng giữa công việc và nghỉ ngơi. Có vẻ như bạn chưa hoàn thành bài test tính cách — bạn muốn làm thử không?`,
       timestamp: new Date(),
     };
@@ -138,18 +151,23 @@ export default function FullVersionPage() {
           <span className="text-sm font-medium">Quay lại</span>
         </button>
 
-        <h1 className="text-base font-semibold text-gray-800">🌿 Productivity Assistant</h1>
+        <h1 className="text-base font-semibold text-gray-800">
+          🌿 Productivity Assistant
+        </h1>
         <div className="w-10" />
       </div>
 
       {/* Chat area */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3 pb-24">
         {messages.map((msg) => (
-          <div key={msg.id} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+          <div
+            key={msg.id}
+            className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
             <div
               className={`max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${msg.type === 'user'
-                ? 'bg-green-500 text-white rounded-br-none'
-                : 'bg-gray-100 text-gray-800 rounded-bl-none'
+                  ? 'bg-green-500 text-white rounded-br-none'
+                  : 'bg-gray-100 text-gray-800 rounded-bl-none'
                 }`}
             >
               {msg.content}
@@ -158,7 +176,9 @@ export default function FullVersionPage() {
         ))}
 
         {isTyping && (
-          <div className="flex items-center text-xs text-gray-500 italic">AI đang gõ...</div>
+          <div className="flex items-center text-xs text-gray-500 italic">
+            AI đang gõ...
+          </div>
         )}
 
         <div ref={messagesEndRef} />
@@ -180,7 +200,12 @@ export default function FullVersionPage() {
           className="p-2.5 bg-green-500 text-white rounded-full hover:bg-green-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+            />
           </svg>
         </button>
       </div>

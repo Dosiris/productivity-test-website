@@ -1,33 +1,53 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { savePersonalityProfile } from '@/lib/storage';
-import { personalityTypes } from '@/lib/personalityScoring'; // ✅ để lấy dữ liệu typeData mặc định
+import {
+  getPersonalityProfile,
+  savePersonalityProfile,
+  updateUserName,
+} from '@/lib/storage';
+import { personalityTypes } from '@/lib/personalityScoring';
 
 export default function TestPage() {
   const [name, setName] = useState('');
   const router = useRouter();
 
+  // ✅ Lấy lại tên cũ nếu đã có profile
+  useEffect(() => {
+    const existingProfile = getPersonalityProfile();
+    if (existingProfile?.userName) {
+      setName(existingProfile.userName);
+    }
+  }, []);
+
   const handleNext = () => {
     const trimmedName = name.trim();
     if (!trimmedName) return;
 
-    // ✅ Khởi tạo profile trống ban đầu, có đủ typeData
-    savePersonalityProfile({
-      userName: trimmedName,
-      answers: [],
-      score: {
-        busyBee: 0,
-        chiller: 0,
-        balancer: 0,
-        overAchiever: 0,
-      },
-      typeKey: 'balancer',
-      typeData: personalityTypes['balancer'], // ✅ thêm dòng này
-      timestamp: Date.now(),
-    });
+    const existingProfile = getPersonalityProfile();
 
+    if (existingProfile) {
+      // ✅ Nếu đã có profile → chỉ cập nhật tên
+      updateUserName(trimmedName);
+    } else {
+      // ✅ Nếu chưa có → khởi tạo profile mới
+      savePersonalityProfile({
+        userName: trimmedName,
+        answers: [],
+        score: {
+          busyBee: 0,
+          chiller: 0,
+          balancer: 0,
+          overAchiever: 0,
+        },
+        typeKey: 'balancer',
+        typeData: personalityTypes['balancer'],
+        timestamp: Date.now(),
+      });
+    }
+
+    // ✅ Điều hướng sang trang câu hỏi
     router.push('/questions');
   };
 
