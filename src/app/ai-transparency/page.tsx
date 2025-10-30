@@ -23,7 +23,7 @@ const AITransparency = () => {
                 <>
                     <p className="text-gray-700 leading-relaxed">
                         Chúng tôi đã sử dụng các công cụ AI như <strong>ChatGPT</strong> và{' '}
-                        <strong>Copilot</strong> với hai mục đích chính:
+                        <strong>Cursor</strong> với hai mục đích chính:
                     </p>
                     <ul className="list-disc list-inside mt-3 space-y-1 text-gray-700">
                         <li>
