@@ -20,7 +20,7 @@ export default function FullVersionPage() {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const profileRef = useRef<{ userName: string; type: any } | null>(null);
 
-  // 🔹 Khi load trang, đọc dữ liệu người dùng từ localStorage
+  // 🔹 Load thông tin người dùng
   useEffect(() => {
     try {
       const profile = getPersonalityProfile();
@@ -46,7 +46,7 @@ export default function FullVersionPage() {
       profileRef.current = { userName: 'bạn', type: null };
     }
 
-    // ✅ Tin nhắn chào đầu tiên
+    // ✅ Tin nhắn đầu tiên
     const firstMessage: Message = {
       id: 'welcome',
       type: 'ai',
@@ -59,7 +59,7 @@ export default function FullVersionPage() {
     setMessages([firstMessage]);
   }, []);
 
-  // 🔹 Tự động cuộn khi có tin nhắn mới
+  // 🔹 Auto scroll khi có tin nhắn mới
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -154,7 +154,14 @@ export default function FullVersionPage() {
         <h1 className="text-base font-semibold text-gray-800">
           🌿 Productivity Assistant
         </h1>
-        <div className="w-10" />
+
+        {/* 🔹 Nút dẫn tới trang minh bạch AI */}
+        <button
+          onClick={() => router.push('/ai-transparency')}
+          className="text-xs bg-green-100 text-green-700 px-3 py-1.5 rounded-full hover:bg-green-200 transition font-medium shadow-sm"
+        >
+          🧠 Tính minh bạch AI
+        </button>
       </div>
 
       {/* Chat area */}
@@ -166,8 +173,8 @@ export default function FullVersionPage() {
           >
             <div
               className={`max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${msg.type === 'user'
-                  ? 'bg-green-500 text-white rounded-br-none'
-                  : 'bg-gray-100 text-gray-800 rounded-bl-none'
+                ? 'bg-green-500 text-white rounded-br-none'
+                : 'bg-gray-100 text-gray-800 rounded-bl-none'
                 }`}
             >
               {msg.content}
